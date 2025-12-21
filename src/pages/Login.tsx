@@ -107,7 +107,7 @@ const Login = () => {
           <Link
             to="/signup"
             type="submit"
-            className="w-full border-2 text-black border-black cursor-pointer text-xl font-bold p-2 rounded-md hover:border-golden hover:bg-golden hover:text-white"
+            className="w-full border-2 text-black border-black cursor-pointer text-xl text-center font-bold p-2 rounded-md hover:border-golden hover:bg-golden hover:text-white"
           >
             Register
           </Link>
