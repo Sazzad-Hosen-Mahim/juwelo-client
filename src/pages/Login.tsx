@@ -94,6 +94,9 @@ const Login = () => {
           <button
             type="submit"
             className="w-full bg-golden text-white text-xl font-bold p-2 cursor-pointer rounded-md hover:bg-gray-800"
+            onClick={() => {
+              navigate("/index");
+            }}
           >
             Sign In
           </button>
