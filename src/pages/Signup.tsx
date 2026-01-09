@@ -3,6 +3,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "@/store/api/auth/authApi";
+import CountryCodeSelect from "@/components/Common/CountryCodeSelect";
+
 
 // Schema: phone, captcha (4 digits), password, confirmPassword, invitationCode (optional), email
 const signupSchema = z
@@ -29,6 +32,9 @@ const generateCaptcha = () =>
 
 const Signup = () => {
   const [captchaCode, setCaptchaCode] = useState<string>(generateCaptcha());
+  const [countryCode, setCountryCode] = useState("+880");
+  const [registerUser, { isLoading }] = useRegisterMutation();
+
 
   const {
     register,
@@ -43,8 +49,7 @@ const Signup = () => {
 
   const refreshCaptcha = () => setCaptchaCode(generateCaptcha());
 
-  const onSubmit = (data: SignupFormInputs) => {
-    // Verify captcha matches generated code
+  const onSubmit = async (data: SignupFormInputs) => {
     if (data.captcha !== captchaCode) {
       setError("captcha", {
         type: "manual",
@@ -53,16 +58,22 @@ const Signup = () => {
       return;
     }
 
-    // Submit (replace with real submit logic)
-    const payload = {
-      phone: data.phone,
-      email: data.email,
-      invitationCode: data.invitationCode || "",
-    };
+    try {
+      await registerUser({
+        name: data.email.split("@")[0],
+        phoneNumber: `${countryCode}${data.phone}`,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        invitationCode: data.invitationCode,
+      }).unwrap();
 
-    console.log("Signup Data:", payload);
-    navigate("/login");
+      navigate("/login");
+    } catch (err: any) {
+      console.error("Registration failed", err);
+    }
   };
+
 
   return (
     <div className="flex  justify-center max-w-[500px] mx-auto h-auto scroll-y-auto">
@@ -75,9 +86,8 @@ const Signup = () => {
               Phone
             </label>
             <div className="flex items-center border-1 border-gray-400 rounded-md focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
-              <span className="bg-gray-100 px-3 py-2 border-r border-gray-400 text-gray-600 font-medium">
-                +880
-              </span>
+              <CountryCodeSelect value={countryCode}
+                onChange={setCountryCode}></CountryCodeSelect>
               <input
                 type="number"
                 {...register("phone")}
@@ -186,10 +196,12 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full bg-golden text-white text-xl font-bold p-2 cursor-pointer rounded-md hover:bg-gray-800"
+            disabled={isLoading}
+            className="w-full bg-golden text-white text-xl font-bold p-2 rounded-md hover:bg-gray-800 disabled:opacity-50"
           >
-            Register
+            {isLoading ? "Registering..." : "Register"}
           </button>
+
         </form>
         <p className="mt-4">
           Already have an account?{" "}

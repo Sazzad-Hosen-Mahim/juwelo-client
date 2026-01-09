@@ -23,6 +23,13 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleLogOut = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  }
+
   return (
     <nav className="bg-[#181C14] shadow-lg w-[500px] mx-auto">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,7 +118,11 @@ const Navbar = () => {
 
                   {/* Sign Out Button */}
                   <div className="p-4 border-t border-gray-200">
-                    <button className="w-full py-3 border-2 border-red-500 text-red-500 rounded-md font-medium hover:bg-red-50 transition-colors">
+                    <button className="w-full cursor-pointer py-3 border-2 border-red-500 text-red-500 rounded-md font-medium hover:bg-red-50 transition-colors"
+                      onClick={() => {
+                        handleLogOut()
+                      }}
+                    >
                       Sign Out
                     </button>
                   </div>
