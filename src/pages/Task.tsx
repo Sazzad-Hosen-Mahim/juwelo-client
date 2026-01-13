@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronRight, Star } from "lucide-react";
 import prod1 from "@/assets/product/prod-1.webp";
 import prod2 from "@/assets/product/prod-2.webp";
@@ -7,8 +8,8 @@ import prod4 from "@/assets/product/prod-4.webp";
 import prod5 from "@/assets/product/prod-5.webp";
 import AccountDetailsModal from "@/components/modal/AccountDetailsModal";
 import PackageSelectionModal from "@/components/modal/PackageSelectionModal";
+import MysteryBoxModal from "@/components/modal/MysteryBoxModal";
 import { useGetSingleUserQuery, useUpdateSelectedPackageMutation } from "@/store/api/user/userApi";
-import { useNavigate } from "react-router-dom";
 
 interface TaskItem {
   id: number;
@@ -18,6 +19,7 @@ interface TaskItem {
 }
 
 const Task: React.FC = () => {
+  const navigate = useNavigate();
   const tasks: TaskItem[] = [
     {
       id: 1,
@@ -53,13 +55,11 @@ const Task: React.FC = () => {
 
   const [openAccountModal, setOpenAccountModal] = useState(false);
   const [openPackageModal, setOpenPackageModal] = useState(false);
-
-  const navigate = useNavigate();
+  const [openMysteryBoxModal, setOpenMysteryBoxModal] = useState(false);
+  const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
 
   // Fetch user data - Replace 7872843 with actual userId from auth/context
-  const id = localStorage.getItem("userId");
-  const userId = id ? Number(id) : 2;
-
+  const userId = 7872843;
   const { data: userData, isLoading } = useGetSingleUserQuery(userId);
   const [updatePackage, { isLoading: isUpdating }] =
     useUpdateSelectedPackageMutation();
@@ -76,14 +76,26 @@ const Task: React.FC = () => {
   };
 
   const handleStartClick = () => {
+    // Check if user has admin assigned products with mystery box
+    if (user?.adminAssaignProducts && user.adminAssaignProducts.length > 0) {
+      const productWithMysteryBox = user.adminAssaignProducts.find(
+        (product: any) => product.mysterybox && product.mysterybox.method && product.mysterybox.amount
+      );
+
+      if (productWithMysteryBox) {
+        setMysteryBoxData(productWithMysteryBox.mysterybox);
+        setOpenMysteryBoxModal(true);
+        return;
+      }
+    }
+
     // Check if user has selected package
     if (!user?.userSelectedPackage) {
       // Show package selection modal
       setOpenPackageModal(true);
     } else {
-      // TODO: Handle start action when package is already selected
+      // Navigate to product page
       navigate("/product");
-      // This is where you'll implement the next functionality
     }
   };
 
@@ -193,7 +205,7 @@ const Task: React.FC = () => {
         </div>
         <button
           onClick={handleStartClick}
-          className="w-full py-4 text-white cursor-pointer bg-black hover:bg-gray-900 font-semibold text-lg transition-colors"
+          className="w-full py-4 text-white bg-black hover:bg-gray-900 font-semibold text-lg transition-colors"
         >
           Start
         </button>
@@ -213,6 +225,19 @@ const Task: React.FC = () => {
         onSelectPackage={handlePackageSelection}
         isLoading={isUpdating}
       />
+
+      {mysteryBoxData && (
+        <MysteryBoxModal
+          open={openMysteryBoxModal}
+          onClose={() => {
+            setOpenMysteryBoxModal(false);
+            setMysteryBoxData(null);
+            // After closing mystery box, navigate to product
+            navigate("/product");
+          }}
+          mysteryBoxData={mysteryBoxData}
+        />
+      )}
 
       {/* Add padding at bottom to prevent content from being hidden behind fixed buttons */}
       <div className="h-32"></div>
