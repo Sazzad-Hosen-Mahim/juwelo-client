@@ -53,16 +53,14 @@ const Login = () => {
         password: data.password,
       }).unwrap();
 
-      dispatch(
-        setCredentials({
-          user: {
-            role: res.data.role,
-            email: res.data.email,
-          },
-          token: res.data.accessToken,
-          refreshToken: res.data.refreshToken,
-        })
-      );
+      dispatch(setCredentials({
+        user: {
+          role: res.data.role,
+          email: res.data.email,
+        },
+        token: res.data.accessToken,
+        refreshToken: res.data.refreshToken,
+      }))
 
       navigate("/index");
     } catch (err: any) {
