@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChevronRight, Star } from "lucide-react";
 import prod1 from "@/assets/product/prod-1.webp";
 import prod2 from "@/assets/product/prod-2.webp";
 import prod3 from "@/assets/product/prod-3.webp";
 import prod4 from "@/assets/product/prod-4.webp";
 import prod5 from "@/assets/product/prod-5.webp";
+import AccountDetailsModal from "@/components/modal/AccountDetailsModal";
+import PackageSelectionModal from "@/components/modal/PackageSelectionModal";
+import { useGetSingleUserQuery, useUpdateSelectedPackageMutation } from "@/store/api/user/userApi";
+import { useNavigate } from "react-router-dom";
 
 interface TaskItem {
   id: number;
@@ -47,8 +51,67 @@ const Task: React.FC = () => {
     },
   ];
 
+  const [openAccountModal, setOpenAccountModal] = useState(false);
+  const [openPackageModal, setOpenPackageModal] = useState(false);
+
+  const navigate = useNavigate();
+
+  // Fetch user data - Replace 7872843 with actual userId from auth/context
+  const id = localStorage.getItem("userId");
+  const userId = id ? Number(id) : 2;
+
+  const { data: userData, isLoading } = useGetSingleUserQuery(userId);
+  const [updatePackage, { isLoading: isUpdating }] =
+    useUpdateSelectedPackageMutation();
+
+  const user = userData?.data;
+
+  const accountDetailsData = {
+    name: user?.name || "sajjadhosenmahim",
+    userId: user?.userId || 7872843,
+    quantityOfOrders: user?.quantityOfOrders || 25,
+    userBalance: user?.userBalance || 0,
+    memberTotalRecharge: user?.memberTotalRecharge || 0,
+    userType: user?.userType || "Normal",
+  };
+
+  const handleStartClick = () => {
+    // Check if user has selected package
+    if (!user?.userSelectedPackage) {
+      // Show package selection modal
+      setOpenPackageModal(true);
+    } else {
+      // TODO: Handle start action when package is already selected
+      navigate("/product");
+      // This is where you'll implement the next functionality
+    }
+  };
+
+  const handlePackageSelection = async (amount: number) => {
+    try {
+      await updatePackage({ userId, amount }).unwrap();
+      setOpenPackageModal(false);
+      // After successful update, the query will refetch automatically
+      console.log("Package selected successfully:", amount);
+    } catch (error) {
+      console.error("Failed to update package:", error);
+      // You can add error handling/toast notification here
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-[500px] mx-auto bg-white h-auto   ">
+    <div className="max-w-[500px] mx-auto bg-white h-auto">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center text-sm text-gray-600 mb-3">
@@ -91,7 +154,7 @@ const Task: React.FC = () => {
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.currentTarget.src =
-                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect fill='%23e5e7eb' width='64' height='64'/%3E%3C/svg%3E";
+                      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect fill='%23e5e7eb' width='64' height='64'/%3E%3C/svg%3E%3C/svg%3E";
                   }}
                 />
               </div>
@@ -117,17 +180,39 @@ const Task: React.FC = () => {
       {/* Bottom Buttons */}
       <div className="max-w-[500px] px-5 mx-auto bg-white border-t border-gray-200">
         <div className="grid grid-cols-2 gap-2 mb-4 my-8">
-          <button className="py-4 text-white bg-gray-600 hover:bg-gray-700 font-medium transition-colors">
+          <button
+            onClick={() => setOpenAccountModal(true)}
+            className="py-4 text-white bg-gray-600 hover:bg-gray-700 font-medium transition-colors"
+          >
             Account Details
           </button>
+
           <button className="py-4 text-white bg-gray-600 hover:bg-gray-700 font-medium transition-colors">
             Order Record
           </button>
         </div>
-        <button className="w-full py-4 text-white bg-black hover:bg-gray-900 font-semibold text-lg transition-colors">
+        <button
+          onClick={handleStartClick}
+          className="w-full py-4 text-white cursor-pointer bg-black hover:bg-gray-900 font-semibold text-lg transition-colors"
+        >
           Start
         </button>
       </div>
+
+      {/* Modals */}
+      <AccountDetailsModal
+        open={openAccountModal}
+        onClose={() => setOpenAccountModal(false)}
+        data={accountDetailsData}
+      />
+
+      <PackageSelectionModal
+        open={openPackageModal}
+        onClose={() => setOpenPackageModal(false)}
+        availableSlots={user?.userOrderAmountSlot || []}
+        onSelectPackage={handlePackageSelection}
+        isLoading={isUpdating}
+      />
 
       {/* Add padding at bottom to prevent content from being hidden behind fixed buttons */}
       <div className="h-32"></div>

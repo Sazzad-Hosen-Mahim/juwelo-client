@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
+  userId: number;
   role: string;
-  email: string;
+  email?: string;
 }
 
 interface AuthState {
@@ -27,11 +28,16 @@ const authSlice = createSlice({
       state.refreshToken = action.payload.refreshToken;
       localStorage.setItem("accessToken", action.payload.token);
       localStorage.setItem("refreshToken", action.payload.refreshToken);
+      localStorage.setItem("userId", String(action.payload.user.userId))
+      localStorage.setItem("role", String(action.payload.user.role))
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("role")
     },
   },
 });

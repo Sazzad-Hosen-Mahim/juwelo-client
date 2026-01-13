@@ -55,8 +55,9 @@ const Login = () => {
 
       dispatch(setCredentials({
         user: {
+          userId: res.data.userId,     // ← now using real field
           role: res.data.role,
-          email: res.data.email,
+          email: res.data.email,    // ← remove or make optional
         },
         token: res.data.accessToken,
         refreshToken: res.data.refreshToken,

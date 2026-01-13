@@ -1,0 +1,238 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import { useConfirmPurchaseOrderMutation, useGetPurchaseOrderQuery } from "@/store/api/user/userApi";
+
+
+const Product: React.FC = () => {
+    const navigate = useNavigate();
+    const [userId, setUserId] = useState<number | null>(null);
+
+    // Get userId from localStorage
+    useEffect(() => {
+        const storedUserId = localStorage.getItem("userId");
+        if (storedUserId) {
+            setUserId(Number(storedUserId));
+        } else {
+            // If no userId, redirect to login or home
+            navigate("/");
+        }
+    }, [navigate]);
+
+    const {
+        data: purchaseData,
+        isLoading,
+        error,
+        refetch,
+    } = useGetPurchaseOrderQuery(userId!, {
+        skip: !userId,
+        // Force refetch on component mount
+        refetchOnMountOrArgChange: true,
+    });
+
+    const [confirmPurchase, { isLoading: isConfirming }] =
+        useConfirmPurchaseOrderMutation();
+
+    const product = purchaseData?.data?.product;
+    const orderNumber = purchaseData?.data?.orderNumber;
+
+    // Refetch on component mount
+    useEffect(() => {
+        if (userId) {
+            refetch();
+        }
+    }, [userId, refetch]);
+
+    const handleBack = () => {
+        navigate("/task");
+    };
+
+    const handleSubmit = async () => {
+        if (!userId || !product?.productId) return;
+
+        try {
+            await confirmPurchase({
+                userId,
+                productId: product.productId,
+            }).unwrap();
+
+            // Navigate back to task page after successful confirmation
+            navigate("/task");
+        } catch (error) {
+            console.error("Failed to confirm purchase:", error);
+            // You can add error handling/toast notification here
+        }
+    };
+
+    const formatCurrency = (amount: number) => {
+        return `৳${amount.toLocaleString()}`;
+    };
+
+    if (isLoading) {
+        return (
+            <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Loading product...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !product) {
+        return (
+            <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
+                <div className="text-center px-4">
+                    <p className="text-red-600 mb-4">Failed to load product</p>
+                    <button
+                        onClick={handleBack}
+                        className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                    >
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="max-w-[500px] mx-auto bg-white pb-32">
+            {/* Header */}
+            <div className="bg-white border-b border-gray-200 px-4 py-4 sticky top-0 z-10">
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={handleBack}
+                        className="text-gray-600 hover:text-gray-900 transition-colors"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                    </button>
+                    <h1 className="text-xl font-bold text-gray-900">Product Details</h1>
+                </div>
+            </div>
+
+            {/* Order Number Badge */}
+            {orderNumber && (
+                <div className="px-4 py-3 bg-gray-50">
+                    <div className="inline-block px-3 py-1 bg-gray-900 text-white text-sm font-medium rounded">
+                        Order #{orderNumber}
+                    </div>
+                </div>
+            )}
+
+            {/* Product Image */}
+            <div className="w-full aspect-square bg-gray-100 overflow-hidden">
+                <img
+                    src={product.poster}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                        e.currentTarget.src =
+                            "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e5e7eb' width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='20'%3ENo Image%3C/text%3E%3C/svg%3E";
+                    }}
+                />
+            </div>
+
+            {/* Product Information */}
+            <div className="p-4 space-y-4">
+                {/* Product Name */}
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                        {product.name}
+                    </h2>
+                    <span
+                        className={`inline-block px-2 py-1 text-xs font-medium rounded ${product.status === "Active"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                            }`}
+                    >
+                        {product.status}
+                    </span>
+                </div>
+
+                {/* Pricing Information */}
+                <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Price:</span>
+                        <span className="text-xl font-bold text-gray-900">
+                            {formatCurrency(product.price)}
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Commission:</span>
+                        <span className="text-lg font-semibold text-green-600">
+                            +{formatCurrency(product.commission)}
+                        </span>
+                    </div>
+
+                    <div className="border-t border-gray-200 pt-3">
+                        <div className="flex justify-between items-center">
+                            <span className="text-gray-600 font-medium">Sale Price:</span>
+                            <span className="text-2xl font-bold text-gray-900">
+                                {formatCurrency(product.salePrice)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Product Introduction */}
+                {product.introduction && (
+                    <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                            Description
+                        </h3>
+                        <p className="text-gray-600 leading-relaxed">
+                            {product.introduction}
+                        </p>
+                    </div>
+                )}
+
+                {/* Additional Info */}
+                <div className="space-y-2 text-sm text-gray-500">
+                    <div className="flex justify-between">
+                        <span>Product ID:</span>
+                        <span className="font-medium text-gray-700">
+                            {product.productId}
+                        </span>
+                    </div>
+                    {purchaseData?.data?.isAdminAssigned !== undefined && (
+                        <div className="flex justify-between">
+                            <span>Admin Assigned:</span>
+                            <span className="font-medium text-gray-700">
+                                {purchaseData.data.isAdminAssigned ? "Yes" : "No"}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Bottom Action Buttons */}
+            <div className="fixed bottom-24 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-[500px] mx-auto">
+                <div className="grid grid-cols-2 gap-3">
+                    <button
+                        onClick={handleBack}
+                        className="py-4 px-6 bg-gray-200 cursor-pointer text-gray-900 rounded-lg font-semibold text-lg hover:bg-gray-300 transition-colors"
+                        disabled={isConfirming}
+                    >
+                        Back
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        disabled={isConfirming}
+                        className={`
+              py-4 px-6 rounded-lg font-semibold cursor-pointer text-lg transition-colors
+              ${isConfirming
+                                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                                : "bg-gray-900 text-white hover:bg-gray-800"
+                            }
+            `}
+                    >
+                        {isConfirming ? "Submitting..." : "Submit"}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Product;

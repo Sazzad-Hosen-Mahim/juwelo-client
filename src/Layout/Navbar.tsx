@@ -15,20 +15,25 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "@/assets/juwelo-logo.png";
 import "./Navbar.css";
 import { MdEvent } from "react-icons/md";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { logout } from "@/store/Slices/AuthSlice/authSlice";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const handleLogOut = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
-    window.location.href = "/login";
+
+    dispatch(logout());
+    navigate("/login", { replace: true });
   }
 
   return (
@@ -95,10 +100,12 @@ const Navbar = () => {
 
                   {/* Menu Items */}
                   <div className="flex-1 overflow-y-auto">
-                    <MenuItem
-                      icon={<CreditCard className="w-5 h-5" />}
-                      text="Bind card"
-                    />
+                    <Link to="/bind-account">
+                      <MenuItem
+                        icon={<CreditCard className="w-5 h-5" />}
+                        text="Bind Account"
+                      />
+                    </Link>
                     <MenuItem
                       icon={<LogIn className="w-5 h-5" />}
                       text="Sign in"
