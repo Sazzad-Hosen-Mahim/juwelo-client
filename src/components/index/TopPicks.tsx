@@ -5,7 +5,7 @@ const TopPicks = () => {
       <div className="absolute inset-0 bg-black/25" />
 
       {/* Top Left Text */}
-      <div className="absolute top-10 left-6 z-10 bg-gray-700/60 p-6 max-w-sm rounded-lg shadow-lg">
+      <div className="absolute top-30 left-6 z-10 bg-gray-700/60 p-6 max-w-sm rounded-lg shadow-lg">
         <h3 className="text-2xl text-white font-bold mb-3">Our Top Picks</h3>
         <p className="text-white text-sm leading-relaxed">
           Hand-selected pieces that define elegance and sophistication. Each
@@ -14,7 +14,7 @@ const TopPicks = () => {
       </div>
 
       {/* Bottom Right Text */}
-      <div className="absolute bottom-10 right-6 z-10 bg-gray-700/60 p-6 max-w-sm rounded-lg shadow-lg text-right">
+      <div className="absolute bottom-12 right-6 z-10 bg-gray-700/60 p-6 max-w-sm rounded-lg shadow-lg text-right">
         <h3 className="text-2xl text-white font-bold mb-3">
           Signature Selections
         </h3>
