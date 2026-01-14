@@ -12,6 +12,7 @@ import Task from "@/pages/Task";
 import BindAccount from "@/pages/BindAccount";
 import OrderRecord from "@/pages/OrderRecord";
 import Product from "@/pages/Product";
+import CheckIn from "@/pages/CheckIn";
 
 const routes = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const routes = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/check-in",
+        element: <CheckIn />,
       },
       {
         path: "/services",

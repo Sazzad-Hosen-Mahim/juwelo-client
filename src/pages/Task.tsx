@@ -131,7 +131,7 @@ const Task: React.FC = () => {
           <ChevronRight className="w-4 h-4 mx-1" />
           <span className="text-gray-900">Go Shopping</span>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900">Hummel Order</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Juwelo Order</h1>
       </div>
 
       {/* Tab Headers */}

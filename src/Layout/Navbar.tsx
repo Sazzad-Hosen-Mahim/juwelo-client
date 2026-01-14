@@ -14,7 +14,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "@/assets/juwelo-logo.png";
 import "./Navbar.css";
-import { MdEvent } from "react-icons/md";
+import { MdEvent, MdPermContactCalendar } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { logout } from "@/store/Slices/AuthSlice/authSlice";
@@ -106,10 +106,12 @@ const Navbar = () => {
                         text="Bind Account"
                       />
                     </Link>
-                    <MenuItem
-                      icon={<LogIn className="w-5 h-5" />}
-                      text="Sign in"
-                    />
+                    <Link to="/check-in">
+                      <MenuItem
+                        icon={<LogIn className="w-5 h-5" />}
+                        text="Check In"
+                      />
+                    </Link>
                     <MenuItem
                       icon={<HelpCircle className="w-5 h-5" />}
                       text="Help Center"
@@ -160,7 +162,7 @@ const Navbar = () => {
               href="/contact"
               className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              Contact
+              <MdPermContactCalendar className="w-6 h-6" />
             </a>
           </div>
 
