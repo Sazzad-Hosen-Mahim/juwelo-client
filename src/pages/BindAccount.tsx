@@ -1,5 +1,6 @@
 import { useBindAccountMutation } from "@/store/api/withdraw/withdrawApi";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const BindAccount = () => {
     const [bankName, setBankName] = useState("");
@@ -21,7 +22,7 @@ const BindAccount = () => {
                 withdrawalAddress,
             }).unwrap();
 
-            alert("Account bound successfully");
+            toast("Account bound successfully");
         } catch (err) {
             console.error("Bind account failed", err);
         }

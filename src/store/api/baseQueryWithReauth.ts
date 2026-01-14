@@ -8,6 +8,7 @@ import { logout, setCredentials } from "../Slices/AuthSlice/authSlice";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
+    credentials: "include",
     prepareHeaders: (headers, { getState }) => {
         const token = (getState() as RootState).auth.token;
         if (token) {
@@ -25,7 +26,12 @@ export const baseQueryWithReauth: BaseQueryFn<
     let result = await baseQuery(args, api, extraOptions);
 
     // ✅ If access token expired
-    if (result.error && (result.error as any).status === 401) {
+    if (
+        result.error &&
+        ((result.error as any).status === 401 ||
+            (result.error as any).status === 403)
+    ) {
+
         const state = api.getState() as RootState;
 
         if (!state.auth.refreshToken) {

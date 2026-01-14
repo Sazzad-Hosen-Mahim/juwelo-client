@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   User,
@@ -15,7 +15,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "@/assets/juwelo-logo.png";
 import "./Navbar.css";
 import { MdEvent, MdPermContactCalendar } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { logout } from "@/store/Slices/AuthSlice/authSlice";
 
@@ -23,21 +23,32 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const handleLogOut = () => {
+  // Close sheet when route changes
+  useEffect(() => {
+    setIsOpen(false);
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
+  const handleLogOut = () => {
+    setIsOpen(false); // Close sheet before logout
     dispatch(logout());
     navigate("/login", { replace: true });
-  }
+  };
+
+  const handleMenuItemClick = () => {
+    setIsOpen(false); // Close sheet when menu item is clicked
+  };
 
   return (
-    <nav className="bg-[#181C14] shadow-lg w-[500px] mx-auto">
+    <nav className="bg-[#181C14] shadow-lg w-full relative">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo with Sheet */}
@@ -53,7 +64,7 @@ const Navbar = () => {
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="custom-sheet-width p-0 bg-white transition-all duration-300 ease-in-out"
+                className="custom-sheet-width p-0 bg-white transition-all duration-300 ease-in-out w-[280px] sm:w-[350px] fixed left-0 top-0 h-full"
               >
                 <div className="flex flex-col h-full">
                   {/* User Profile Section */}
@@ -100,38 +111,43 @@ const Navbar = () => {
 
                   {/* Menu Items */}
                   <div className="flex-1 overflow-y-auto">
-                    <Link to="/bind-account">
+                    <Link to="/bind-account" onClick={handleMenuItemClick}>
                       <MenuItem
                         icon={<CreditCard className="w-5 h-5" />}
                         text="Bind Account"
                       />
                     </Link>
-                    <Link to="/check-in">
+                    <Link to="/check-in" onClick={handleMenuItemClick}>
                       <MenuItem
                         icon={<LogIn className="w-5 h-5" />}
                         text="Check In"
                       />
                     </Link>
-                    <MenuItem
-                      icon={<HelpCircle className="w-5 h-5" />}
-                      text="Help Center"
-                    />
-                    <MenuItem
-                      icon={<Info className="w-5 h-5" />}
-                      text="About Us"
-                    />
-                    <MenuItem
-                      icon={<Settings className="w-5 h-5" />}
-                      text="Setting"
-                    />
+                    <Link to="/forgot-password" onClick={handleMenuItemClick}>
+                      <MenuItem
+                        icon={<Settings className="w-5 h-5" />}
+                        text="Change Password"
+                      />
+                    </Link>
+                    <Link to="/help" onClick={handleMenuItemClick}>
+                      <MenuItem
+                        icon={<HelpCircle className="w-5 h-5" />}
+                        text="Help"
+                      />
+                    </Link>
+                    <div onClick={handleMenuItemClick}>
+                      <MenuItem
+                        icon={<Info className="w-5 h-5" />}
+                        text="About Us"
+                      />
+                    </div>
                   </div>
 
                   {/* Sign Out Button */}
                   <div className="p-4 border-t border-gray-200">
-                    <button className="w-full cursor-pointer py-3 border-2 border-red-500 text-red-500 rounded-md font-medium hover:bg-red-50 transition-colors"
-                      onClick={() => {
-                        handleLogOut()
-                      }}
+                    <button
+                      className="w-full cursor-pointer py-3 border-2 border-red-500 text-red-500 rounded-md font-medium hover:bg-red-50 transition-colors"
+                      onClick={handleLogOut}
                     >
                       Sign Out
                     </button>

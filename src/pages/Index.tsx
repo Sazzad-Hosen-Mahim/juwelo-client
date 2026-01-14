@@ -9,7 +9,7 @@ import WhyChoose from "@/components/index/WhyChoose";
 
 const Index = () => {
   return (
-    <div className="w-[500px] flex flex-col mx-auto">
+    <div className="w-full flex flex-col">
       <Grab />
       <WhyChoose />
       <Flexibility />

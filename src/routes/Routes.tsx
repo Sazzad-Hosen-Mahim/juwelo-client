@@ -6,13 +6,14 @@ import NotFound from "../pages/NotFound";
 import Login from "@/pages/Login";
 import Signup from "@/pages/Signup";
 import Services from "@/pages/Services";
-import ForgotPassword from "@/pages/ForgotPassword";
+// import ForgotPassword from "@/pages/ForgotPassword";
 import Index from "@/pages/Index";
 import Task from "@/pages/Task";
 import BindAccount from "@/pages/BindAccount";
 import OrderRecord from "@/pages/OrderRecord";
 import Product from "@/pages/Product";
 import CheckIn from "@/pages/CheckIn";
+import ChangePassword from "@/pages/ChangePassword";
 
 const routes = createBrowserRouter([
   {
@@ -45,7 +46,7 @@ const routes = createBrowserRouter([
       },
       {
         path: "/forgot-password",
-        element: <ForgotPassword />,
+        element: <ChangePassword />,
       },
       {
         path: "/signup",

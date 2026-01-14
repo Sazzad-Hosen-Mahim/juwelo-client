@@ -14,6 +14,11 @@ interface LoginPayload {
     password: string;
 }
 
+interface ChangePasswordPayload {
+    oldPassword: string;
+    newPassword: string;
+}
+
 export const authApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         register: builder.mutation<any, RegisterPayload>({
@@ -40,8 +45,14 @@ export const authApi = baseApi.injectEndpoints({
                 body: data,
             }),
         }),
-
+        changePassword: builder.mutation<any, ChangePasswordPayload>({
+            query: (data) => ({
+                url: "/auth/change-password",
+                method: "POST",
+                body: data,
+            }),
+        }),
     }),
 });
 
-export const { useRegisterMutation, useLoginMutation } = authApi;
+export const { useRegisterMutation, useLoginMutation, useChangePasswordMutation } = authApi;

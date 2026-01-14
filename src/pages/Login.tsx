@@ -8,6 +8,7 @@ import { useLoginMutation } from "@/store/api/auth/authApi";
 import CountryCodeSelect from "@/components/Common/CountryCodeSelect";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setCredentials } from "@/store/Slices/AuthSlice/authSlice";
+import { toast } from "sonner";
 
 const loginSchema = z.object({
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
@@ -64,6 +65,7 @@ const Login = () => {
       }))
 
       navigate("/index");
+      toast.success("Login successful");
     } catch (err: any) {
       console.error("Login failed", err);
     }
