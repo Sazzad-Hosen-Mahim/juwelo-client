@@ -25,7 +25,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="w-full max-w-md bg-white rounded-lg shadow-lg">
+            <div className="w-full max-w-md bg-white rounded-lg shadow-md">
                 {/* Header */}
                 <div className="flex items-center justify-between px-5 py-4 border-b">
                     <h2 className="text-lg font-semibold">Account Details</h2>
