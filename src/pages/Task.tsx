@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, Star } from "lucide-react";
 import prod1 from "@/assets/product/prod-1.webp";
@@ -9,7 +9,13 @@ import prod5 from "@/assets/product/prod-5.webp";
 import AccountDetailsModal from "@/components/modal/AccountDetailsModal";
 import PackageSelectionModal from "@/components/modal/PackageSelectionModal";
 import MysteryBoxModal from "@/components/modal/MysteryBoxModal";
-import { useGetSingleUserQuery, useUpdateSelectedPackageMutation } from "@/store/api/user/userApi";
+import MysteryBoxRewardModal from "@/components/modal/MysteryBoxRewardModal";
+import {
+  useGetSingleUserQuery,
+  useUpdateSelectedPackageMutation,
+  useRemoveMysteryRewardMutation
+} from "@/store/api/user/userApi";
+import { toast } from "sonner";
 
 interface TaskItem {
   id: number;
@@ -56,15 +62,24 @@ const Task: React.FC = () => {
   const [openAccountModal, setOpenAccountModal] = useState(false);
   const [openPackageModal, setOpenPackageModal] = useState(false);
   const [openMysteryBoxModal, setOpenMysteryBoxModal] = useState(false);
+  const [openMysteryRewardModal, setOpenMysteryRewardModal] = useState(false);
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
 
-  // Fetch user data - Replace 7872843 with actual userId from auth/context
-  const userId = 7872843;
+  // Fetch user data
+  const id = localStorage.getItem("userId");
+  const userId = id ? parseInt(id) : 0;
   const { data: userData, isLoading } = useGetSingleUserQuery(userId);
-  const [updatePackage, { isLoading: isUpdating }] =
-    useUpdateSelectedPackageMutation();
+  const [updatePackage, { isLoading: isUpdating }] = useUpdateSelectedPackageMutation();
+  const [removeMysteryReward] = useRemoveMysteryRewardMutation();
 
   const user = userData?.data;
+
+  // Check for mystery reward on component mount
+  useEffect(() => {
+    if (user && user.mysteryReward && user.mysteryReward > 0) {
+      setOpenMysteryRewardModal(true);
+    }
+  }, [user]);
 
   const accountDetailsData = {
     name: user?.name || "sajjadhosenmahim",
@@ -77,8 +92,8 @@ const Task: React.FC = () => {
 
   const handleStartClick = () => {
     // Check if user has admin assigned products with mystery box
-    if (user?.adminAssaignProducts && user.adminAssaignProducts.length > 0) {
-      const productWithMysteryBox = user.adminAssaignProducts.find(
+    if (user?.adminAssaignProductsOrRewards && user.adminAssaignProductsOrRewards.length > 0) {
+      const productWithMysteryBox = user.adminAssaignProductsOrRewards.find(
         (product: any) => product.mysterybox && product.mysterybox.method && product.mysterybox.amount
       );
 
@@ -91,10 +106,8 @@ const Task: React.FC = () => {
 
     // Check if user has selected package
     if (!user?.userSelectedPackage) {
-      // Show package selection modal
       setOpenPackageModal(true);
     } else {
-      // Navigate to product page
       navigate("/product");
     }
   };
@@ -103,13 +116,27 @@ const Task: React.FC = () => {
     try {
       await updatePackage({ userId, amount }).unwrap();
       setOpenPackageModal(false);
-      // After successful update, the query will refetch automatically
+      toast.success("Package selected successfully");
       console.log("Package selected successfully:", amount);
     } catch (error) {
       console.error("Failed to update package:", error);
-      // You can add error handling/toast notification here
+      toast.error("Failed to update package");
     }
   };
+
+  const handleMysteryRewardContinue = async () => {
+    try {
+      await removeMysteryReward(userId).unwrap();
+      setOpenMysteryRewardModal(false);
+      toast.success("Mystery reward claimed successfully!");
+      console.log("Mystery reward removed successfully");
+    } catch (error) {
+      console.error("Failed to remove mystery reward:", error);
+      toast.error("Failed to claim mystery reward");
+    }
+  };
+
+  console.log(userData, "mahim");
 
   if (isLoading) {
     return (
@@ -207,7 +234,10 @@ const Task: React.FC = () => {
           onClick={handleStartClick}
           className="w-full py-4 text-white cursor-pointer bg-black hover:bg-gray-900 font-semibold text-lg transition-colors"
         >
-          Start
+          Start{" "}
+          <span className="text-gray-200 ms-2">
+            {userData?.data?.completedOrdersCount} / {userData?.data?.quantityOfOrders}
+          </span>
         </button>
       </div>
 
@@ -226,16 +256,26 @@ const Task: React.FC = () => {
         isLoading={isUpdating}
       />
 
+      {/* Mystery Box Modal (for admin assigned products) */}
       {mysteryBoxData && (
         <MysteryBoxModal
           open={openMysteryBoxModal}
           onClose={() => {
             setOpenMysteryBoxModal(false);
             setMysteryBoxData(null);
-            // After closing mystery box, navigate to product
             navigate("/product");
           }}
           mysteryBoxData={mysteryBoxData}
+        />
+      )}
+
+      {/* Mystery Reward Modal (for global mystery reward) */}
+      {user && user.mysteryReward > 0 && (
+        <MysteryBoxRewardModal
+          open={openMysteryRewardModal}
+          onClose={() => setOpenMysteryRewardModal(false)}
+          mysteryReward={user.mysteryReward}
+          onContinue={handleMysteryRewardContinue}
         />
       )}
 

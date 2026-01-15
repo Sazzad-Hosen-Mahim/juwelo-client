@@ -40,6 +40,15 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Auth"],
         }),
+
+        // Remove mystery reward (reset to 0)
+        removeMysteryReward: builder.mutation({
+            query: (userId: number) => ({
+                url: `/user/remove-mystery-reward/${userId}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["Auth"],
+        }),
     }),
 });
 
@@ -47,5 +56,6 @@ export const {
     useGetSingleUserQuery,
     useUpdateSelectedPackageMutation,
     useGetPurchaseOrderQuery,
-    useConfirmPurchaseOrderMutation
+    useConfirmPurchaseOrderMutation,
+    useRemoveMysteryRewardMutation,
 } = userApi;

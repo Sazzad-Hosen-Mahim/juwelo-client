@@ -43,10 +43,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                             <p className="font-medium">{data.name}</p>
                         </div>
 
-                        <div>
-                            <p className="text-xs text-gray-500">User ID</p>
-                            <p className="font-medium">{data.userId}</p>
-                        </div>
+
                     </div>
 
                     {/* Two column layout */}
@@ -56,10 +53,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                             <p className="font-medium">{data.quantityOfOrders}</p>
                         </div>
 
-                        <div>
-                            <p className="text-xs text-gray-500">User Type</p>
-                            <p className="font-medium">{data.userType}</p>
-                        </div>
+
 
                         <div>
                             <p className="text-xs text-gray-500">Balance</p>
