@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useConfirmPurchaseOrderMutation, useGetPurchaseOrderQuery } from "@/store/api/user/userApi";
+import { toast } from "sonner";
 
 
 const Product: React.FC = () => {
@@ -51,13 +52,28 @@ const Product: React.FC = () => {
         if (!userId || !product?.productId) return;
 
         try {
-            await confirmPurchase({
+            const response = await confirmPurchase({
                 userId,
                 productId: product.productId,
             }).unwrap();
+            if (response?.success === true) {
+                if (response.data?.success === false) {
+                    // This is the case you want to catch and show as error/warning
+                    toast.error(response.data.message || "Operation failed", {
+                        description: "",
+                        duration: 5500,
+                    });
+                    // Optional: you can decide NOT to redirect in this case
+                    return;
+                }
 
-            // Navigate back to task page after successful confirmation
-            navigate("/task");
+                // Normal success case → inner success is true or not present
+                toast.success(response.message || "Order confirmed successfully");
+                navigate("/task");
+            } else {
+                // Outer success === false
+                toast.error(response.message || "Failed to confirm order");
+            }
         } catch (error) {
             console.error("Failed to confirm purchase:", error);
             // You can add error handling/toast notification here
@@ -170,6 +186,12 @@ const Product: React.FC = () => {
                             <span className="text-gray-600 font-medium">Sale Price:</span>
                             <span className="text-2xl font-bold text-gray-900">
                                 {formatCurrency(product.salePrice)}
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center mt-2">
+                            <span className="text-gray-600 font-medium">Out of Balance: </span>
+                            <span className="text-2xl font-bold text-red-500">
+                                {formatCurrency(purchaseData.data.outOfBalance)}
                             </span>
                         </div>
                     </div>

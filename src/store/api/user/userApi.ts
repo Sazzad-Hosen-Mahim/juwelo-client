@@ -49,6 +49,26 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Auth"],
         }),
+
+        claimCheckInReward: builder.mutation<
+            any, // response type (you can type it if you have one)
+            { userId: number; checkInAmount: number }
+        >({
+            query: ({ userId, checkInAmount }) => ({
+                url: `/user/add-check-in-reward/${userId}`,
+                method: "POST",
+                body: { checkInAmount },
+            }),
+            invalidatesTags: ["Auth"], // so user data refetches
+        }),
+
+        getUserCompletedProducts: builder.query({
+            query: (userId: number) => ({
+                url: `/user/get-user-completed-products/${userId}`,
+                method: "GET",
+            }),
+            providesTags: ["Auth"],
+        }),
     }),
 });
 
@@ -58,4 +78,6 @@ export const {
     useGetPurchaseOrderQuery,
     useConfirmPurchaseOrderMutation,
     useRemoveMysteryRewardMutation,
+    useClaimCheckInRewardMutation,
+    useGetUserCompletedProductsQuery,
 } = userApi;

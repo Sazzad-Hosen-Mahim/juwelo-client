@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight, Star } from "lucide-react";
 import prod1 from "@/assets/product/prod-1.webp";
 import prod2 from "@/assets/product/prod-2.webp";
@@ -226,9 +226,9 @@ const Task: React.FC = () => {
             Account Details
           </button>
 
-          <button className="py-4 cursor-pointer text-white bg-gray-600 hover:bg-gray-700 font-medium transition-colors">
+          <Link to="/order-record" className="py-4 cursor-pointer text-white text-center bg-gray-600 hover:bg-gray-700 font-medium transition-colors">
             Order Record
-          </button>
+          </Link>
         </div>
         <button
           onClick={handleStartClick}
