@@ -8,6 +8,7 @@ interface AccountDetails {
     userBalance: number;
     memberTotalRecharge: number;
     userType: string;
+    dailyProfit: number;
 }
 
 interface AccountDetailsModalProps {
@@ -22,6 +23,8 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
     data,
 }) => {
     if (!open) return null;
+
+    console.log(data, "dfadfasfas")
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -63,6 +66,10 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                         <div>
                             <p className="text-xs text-gray-500">Total Recharge</p>
                             <p className="font-medium">{data.memberTotalRecharge}</p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-gray-500">Daily Profit</p>
+                            <p className="font-medium">{data?.dailyProfit}</p>
                         </div>
                     </div>
                 </div>

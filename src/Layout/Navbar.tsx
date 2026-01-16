@@ -52,6 +52,7 @@ const Navbar = () => {
     userBalance: user?.userBalance || 0,
     memberTotalRecharge: user?.memberTotalRecharge || 0,
     userType: user?.userType || "Normal",
+    dailyProfit: user?.dailyProfit || 0,
   };
 
   const toggleMobileMenu = () => {
@@ -98,7 +99,7 @@ const Navbar = () => {
                   </SheetTrigger>
                   <SheetContent
                     side="left"
-                    className="custom-sheet-width p-0 bg-white transition-all duration-300 ease-in-out w-[280px] sm:w-[350px] fixed left-0 top-0 h-full"
+                    className="custom-sheet-width p-0 z-100 bg-white transition-all duration-300 ease-in-out w-[280px] sm:w-[350px] fixed left-0 top-0 h-full"
                   >
                     <div className="flex flex-col h-full">
                       {/* User Profile Section */}
@@ -119,12 +120,14 @@ const Navbar = () => {
 
                       {/* Quick Actions Grid */}
                       <div className="grid grid-cols-4 gap-4 px-6 py-6 border-b border-gray-200">
-                        <button className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity">
-                          <div className="w-12 h-12 flex items-center justify-center">
-                            <DollarSign className="w-6 h-6" />
-                          </div>
-                          <span className="text-xs text-center">Cash Out</span>
-                        </button>
+                        <Link to="/cash-out">
+                          <button className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity">
+                            <div className="w-12 h-12 flex items-center justify-center">
+                              <DollarSign className="w-6 h-6" />
+                            </div>
+                            <span className="text-xs text-center">Cash Out</span>
+                          </button>
+                        </Link>
                         <button className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity">
                           <div className="w-12 h-12 flex items-center justify-center">
                             <Mail className="w-6 h-6" />

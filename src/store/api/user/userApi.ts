@@ -56,7 +56,7 @@ export const userApi = baseApi.injectEndpoints({
         >({
             query: ({ userId, checkInAmount }) => ({
                 url: `/user/add-check-in-reward/${userId}`,
-                method: "POST",
+                method: "PATCH",
                 body: { checkInAmount },
             }),
             invalidatesTags: ["Auth"], // so user data refetches

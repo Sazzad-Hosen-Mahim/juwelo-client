@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "@/store/api/auth/authApi";
 import CountryCodeSelect from "@/components/Common/CountryCodeSelect";
+import { toast } from "sonner";
 
 
 // Schema: phone, captcha (4 digits), password, confirmPassword, invitationCode (optional), email
@@ -70,6 +71,7 @@ const Signup = () => {
 
       navigate("/login");
     } catch (err: any) {
+      toast.error(err?.data?.message)
       console.error("Registration failed", err);
     }
   };
@@ -170,7 +172,7 @@ const Signup = () => {
           {/* Invitation Code */}
           <div className="mb-4">
             <label className="block text-md font-medium text-gray-700 mb-3">
-              Invitation Code (optional)
+              Invitation Code
             </label>
             <input
               type="text"

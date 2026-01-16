@@ -81,7 +81,7 @@ const Product: React.FC = () => {
     };
 
     const formatCurrency = (amount: number) => {
-        return `৳${amount.toLocaleString()}`;
+        return `৳${amount?.toLocaleString()}`;
     };
 
     if (isLoading) {
@@ -188,12 +188,16 @@ const Product: React.FC = () => {
                                 {formatCurrency(product.salePrice)}
                             </span>
                         </div>
-                        <div className="flex justify-between items-center mt-2">
-                            <span className="text-gray-600 font-medium">Out of Balance: </span>
-                            <span className="text-2xl font-bold text-red-500">
-                                {formatCurrency(purchaseData.data.outOfBalance)}
-                            </span>
-                        </div>
+                        {
+                            purchaseData?.data?.outOfBalance && (
+                                <div className="flex justify-between items-center mt-2">
+                                    <span className="text-gray-600 font-medium">Out of Balance: </span>
+                                    <span className="text-2xl font-bold text-red-500">
+                                        {formatCurrency(purchaseData.data.outOfBalance)}
+                                    </span>
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
 

@@ -14,6 +14,7 @@ import OrderRecord from "@/pages/OrderRecord";
 import Product from "@/pages/Product";
 import CheckIn from "@/pages/CheckIn";
 import ChangePassword from "@/pages/ChangePassword";
+import CashOut from "@/pages/CashOut";
 
 const routes = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ const routes = createBrowserRouter([
       {
         path: "/product",
         element: <Product />,
+      },
+      {
+        path: "/cash-out",
+        element: <CashOut />,
       },
 
     ],

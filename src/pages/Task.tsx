@@ -88,6 +88,7 @@ const Task: React.FC = () => {
     userBalance: user?.userBalance || 0,
     memberTotalRecharge: user?.memberTotalRecharge || 0,
     userType: user?.userType || "Normal",
+    dailyProfit: user?.dailyProfit || 0,
   };
 
   const handleStartClick = () => {
