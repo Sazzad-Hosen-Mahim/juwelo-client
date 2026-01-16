@@ -59,6 +59,7 @@ const Login = () => {
           userId: res.data.userId,     // ← now using real field
           role: res.data.role,
           email: res.data.email,    // ← remove or make optional
+          _id: res.data.user_id
         },
         token: res.data.accessToken,
         refreshToken: res.data.refreshToken,

@@ -15,6 +15,8 @@ import Product from "@/pages/Product";
 import CheckIn from "@/pages/CheckIn";
 import ChangePassword from "@/pages/ChangePassword";
 import CashOut from "@/pages/CashOut";
+import History from "@/pages/History";
+import Help from "@/pages/Help";
 
 const routes = createBrowserRouter([
   {
@@ -40,6 +42,14 @@ const routes = createBrowserRouter([
       {
         path: "/services",
         element: <Services />,
+      },
+      {
+        path: "/history",
+        element: <History />,
+      },
+      {
+        path: "/help",
+        element: <Help />,
       },
       {
         path: "/login",

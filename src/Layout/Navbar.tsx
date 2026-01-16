@@ -11,6 +11,7 @@ import {
   Info,
   Settings,
 } from "lucide-react";
+import { MdHistory } from "react-icons/md";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "@/assets/juwelo-logo.png";
 import "./Navbar.css";
@@ -119,7 +120,7 @@ const Navbar = () => {
                       </div>
 
                       {/* Quick Actions Grid */}
-                      <div className="grid grid-cols-4 gap-4 px-6 py-6 border-b border-gray-200">
+                      <div className="grid grid-cols-4 gap-4 px-6 py-2 border-b border-gray-200">
                         <Link to="/cash-out">
                           <button className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
                             <div className="w-12 h-12 flex items-center justify-center">
@@ -171,6 +172,12 @@ const Navbar = () => {
                             text="Check In"
                           />
                         </Link>
+                        <Link to="/history" onClick={handleMenuItemClick}>
+                          <MenuItem
+                            icon={<MdHistory className="w-5 h-5" />}
+                            text="History"
+                          />
+                        </Link>
                         <Link
                           to="/forgot-password"
                           onClick={handleMenuItemClick}
@@ -186,12 +193,12 @@ const Navbar = () => {
                             text="Help"
                           />
                         </Link>
-                        <div onClick={handleMenuItemClick}>
+                        <Link to="/about" onClick={handleMenuItemClick}>
                           <MenuItem
                             icon={<Info className="w-5 h-5" />}
                             text="About Us"
                           />
-                        </div>
+                        </Link>
                       </div>
 
                       {/* Sign Out Button */}

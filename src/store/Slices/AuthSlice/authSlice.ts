@@ -4,6 +4,7 @@ interface User {
   userId: number;
   role: string;
   email?: string;
+  _id: string;
 }
 
 interface AuthState {
@@ -30,6 +31,7 @@ const authSlice = createSlice({
       localStorage.setItem("refreshToken", action.payload.refreshToken);
       localStorage.setItem("userId", String(action.payload.user.userId))
       localStorage.setItem("role", String(action.payload.user.role))
+      localStorage.setItem("mongodbId", String(action.payload.user._id))
     },
     logout: (state) => {
       state.user = null;

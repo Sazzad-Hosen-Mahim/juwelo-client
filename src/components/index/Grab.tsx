@@ -52,7 +52,7 @@ const Grab = () => {
       navigate("/task");
     } catch (error) {
       console.error("Failed to update package:", error);
-      toast.error("Failed to update package");
+      toast.error((error as any)?.data?.message);
     }
   };
 
