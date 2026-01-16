@@ -105,8 +105,8 @@ const Task: React.FC = () => {
       }
     }
 
-    // Check if user has selected package
-    if (!user?.userSelectedPackage) {
+    // Check if user has selected package (0 means not selected)
+    if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {
       setOpenPackageModal(true);
     } else {
       navigate("/product");

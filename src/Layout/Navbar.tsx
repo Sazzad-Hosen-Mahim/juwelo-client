@@ -121,22 +121,24 @@ const Navbar = () => {
                       {/* Quick Actions Grid */}
                       <div className="grid grid-cols-4 gap-4 px-6 py-6 border-b border-gray-200">
                         <Link to="/cash-out">
-                          <button className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity">
+                          <button className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
                             <div className="w-12 h-12 flex items-center justify-center">
                               <DollarSign className="w-6 h-6" />
                             </div>
                             <span className="text-xs text-center">Cash Out</span>
                           </button>
                         </Link>
-                        <button className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity">
-                          <div className="w-12 h-12 flex items-center justify-center">
-                            <Mail className="w-6 h-6" />
-                          </div>
-                          <span className="text-xs text-center">
-                            Contact us
-                          </span>
-                        </button>
-                        <button className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity">
+                        <Link to="/contact">
+                          <button className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
+                            <div className="w-12 h-12 flex items-center justify-center">
+                              <Mail className="w-6 h-6" />
+                            </div>
+                            <span className="text-xs text-center">
+                              Contact us
+                            </span>
+                          </button>
+                        </Link>
+                        <button className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
                           <div className="w-12 h-12 flex items-center justify-center">
                             <Award className="w-6 h-6" />
                           </div>
@@ -144,7 +146,7 @@ const Navbar = () => {
                         </button>
                         <button
                           onClick={handleAccountDetailsClick}
-                          className="flex flex-col items-center gap-2 hover:opacity-70 transition-opacity"
+                          className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity"
                         >
                           <div className="w-12 h-12 flex items-center justify-center">
                             <CreditCard className="w-6 h-6" />
