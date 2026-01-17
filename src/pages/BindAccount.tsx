@@ -1,10 +1,13 @@
 import { useBindAccountMutation } from "@/store/api/withdraw/withdrawApi";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const BindAccount = () => {
     const [bankName, setBankName] = useState("");
     const [withdrawalAddress, setWithdrawalAddress] = useState("");
+
+    const navigate = useNavigate()
 
     const id = localStorage.getItem("userId");
     const userId = id ? id : "";
@@ -23,6 +26,7 @@ const BindAccount = () => {
             }).unwrap();
 
             toast("Account bound successfully");
+            navigate("/index")
         } catch (err) {
             console.error("Bind account failed", err);
         }

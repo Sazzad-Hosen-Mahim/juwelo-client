@@ -74,12 +74,16 @@ const Task: React.FC = () => {
 
   const user = userData?.data;
 
+  console.log(user, "mahim user")
+
   // Check for mystery reward on component mount
   useEffect(() => {
     if (user && user.mysteryReward && user.mysteryReward > 0) {
       setOpenMysteryRewardModal(true);
     }
   }, [user]);
+
+  console.log(user, "userasdfasdfasdf")
 
   const accountDetailsData = {
     name: user?.name || "sajjadhosenmahim",
@@ -89,6 +93,7 @@ const Task: React.FC = () => {
     memberTotalRecharge: user?.memberTotalRecharge || 0,
     userType: user?.userType || "Normal",
     dailyProfit: user?.dailyProfit || 0,
+    outOfBalance: user?.outOfBalance || 0,
   };
 
   const handleStartClick = () => {

@@ -8,7 +8,9 @@ export const userApi = baseApi.injectEndpoints({
                 url: `/user/getSingle/${userId}`,
                 method: "GET",
             }),
-            providesTags: ["Auth"],
+            providesTags: (userId) => [
+                { type: "Auth", id: userId },
+            ],
         }),
 
         // Update selected package amount
@@ -19,6 +21,7 @@ export const userApi = baseApi.injectEndpoints({
                 body: { amount },
             }),
             invalidatesTags: ["Auth"],
+
         }),
 
         // Get purchase order (product to purchase)

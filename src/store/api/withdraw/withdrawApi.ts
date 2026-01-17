@@ -52,7 +52,9 @@ export const withdrawApi = baseApi.injectEndpoints({
                     withdrawalAddress,
                 },
             }),
-            invalidatesTags: ["Withdraw"],
+            invalidatesTags: (userId) => [
+                { type: "Auth", id: Number(userId) },
+            ],
         }),
         createWithdraw: builder.mutation<CreateWithdrawResponse, CreateWithdrawPayload>({
             query: (payload) => ({

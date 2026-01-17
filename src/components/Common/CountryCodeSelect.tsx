@@ -47,6 +47,11 @@ const CountryCodeSelect = ({ value, onChange }: Props) => {
             onChange={(e) => onChange(e.target.value)}
             className="bg-gray-100 w-[120px] px-2 py-2 border-r border-gray-400 focus:outline-none"
         >
+            {/* ✅ Fallback option (shown before fetch completes) */}
+            {!countries.length && (
+                <option value="+880">BAN (+880)</option>
+            )}
+
             {countries.map((country, idx) => {
                 const code = `${country.idd!.root}${country.idd!.suffixes![0]}`;
 
@@ -57,6 +62,7 @@ const CountryCodeSelect = ({ value, onChange }: Props) => {
                 );
             })}
         </select>
+
     );
 };
 

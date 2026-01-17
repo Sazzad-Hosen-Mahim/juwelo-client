@@ -57,9 +57,9 @@ const Product: React.FC = () => {
                 productId: product.productId,
             }).unwrap();
             if (response?.success === true) {
-                if (response.data?.success === false) {
+                if (response?.data?.success === false) {
                     // This is the case you want to catch and show as error/warning
-                    toast.error(response.data.message || "Operation failed", {
+                    toast.error(response?.data?.message || "Operation failed", {
                         description: "",
                         duration: 5500,
                     });
@@ -68,11 +68,11 @@ const Product: React.FC = () => {
                 }
 
                 // Normal success case → inner success is true or not present
-                toast.success(response.message || "Order confirmed successfully");
+                toast.success(response?.message || "Order confirmed successfully");
                 navigate("/task");
             } else {
                 // Outer success === false
-                toast.error(response.message || "Failed to confirm order");
+                toast.error(response?.message || "Failed to confirm order");
             }
         } catch (error) {
             console.error("Failed to confirm purchase:", error);
@@ -188,7 +188,7 @@ const Product: React.FC = () => {
                                 {formatCurrency(product.salePrice)}
                             </span>
                         </div>
-                        {
+                        {/* {
                             purchaseData?.data?.outOfBalance && (
                                 <div className="flex justify-between items-center mt-2">
                                     <span className="text-gray-600 font-medium">Out of Balance: </span>
@@ -197,7 +197,7 @@ const Product: React.FC = () => {
                                     </span>
                                 </div>
                             )
-                        }
+                        } */}
                     </div>
                 </div>
 
