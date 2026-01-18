@@ -4,14 +4,14 @@ import {
   User,
   DollarSign,
   Mail,
-  Award,
+
   CreditCard,
   LogIn,
   HelpCircle,
   Info,
   Settings,
 } from "lucide-react";
-import { MdHistory } from "react-icons/md";
+import { MdHistory, MdPermContactCalendar } from "react-icons/md";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "@/assets/juwelo-logo.png";
 import "./Navbar.css";
@@ -142,12 +142,15 @@ const Navbar = () => {
                             </span>
                           </button>
                         </Link>
-                        <button className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
-                          <div className="w-12 h-12 flex items-center justify-center">
-                            <Award className="w-6 h-6" />
-                          </div>
-                          <span className="text-xs text-center">Level</span>
-                        </button>
+                        <Link to="/score" className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
+                          <button className="cursor-pointer">
+                            <div className="w-12 h-12 flex items-center justify-center">
+                              {/* <Award className="w-6 h-6" /> */}
+                              <MdEmojiEvents className="w-7 h-7" />
+                            </div>
+                            <span className="text-xs text-center">Score</span>
+                          </button>
+                        </Link>
                         <button
                           onClick={handleAccountDetailsClick}
                           className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity"
@@ -237,11 +240,11 @@ const Navbar = () => {
                 <MdEvent className="w-6 h-6" />
               </a>
               <a
-                href="/score"
+                href="/contact"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                {/* <MdPermContactCalendar className="w-6 h-6" /> */}
-                <MdEmojiEvents className="w-6 h-6" />
+                <MdPermContactCalendar className="w-6 h-6" />
+                {/* <MdEmojiEvents className="w-6 h-6" /> */}
               </a>
             </div>
 
