@@ -2,7 +2,11 @@ import { useGetSingleUserQuery } from "@/store/api/user/userApi";
 
 const Score = () => {
     // Get userId from localStorage or your auth state
-    const userId = JSON.parse(localStorage.getItem('user') || '{}')?.userId || 3520335;
+    // const userId = JSON.parse(localStorage.getItem('userId') || '{}')?.userId || 3520335;
+    const id = localStorage.getItem("userId");
+    const userId = id ? parseInt(id) : 0;
+
+    console.log(userId, "score userId");
 
     const { data, isLoading } = useGetSingleUserQuery(userId);
     const score = data?.data?.score || 0;
