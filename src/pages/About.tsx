@@ -34,14 +34,14 @@ export default function AboutUs() {
           <div className="flex items-start">
             <span className="text-gray-900 font-bold mr-3 mt-1">•</span>
             <p className="text-base">
-              Aurate New York is an international platform company that provides gold and jewelry buying, selling and trading. Its main goal is to help brands and retailers collect, manage and nationally order transactions.
+              Juwelo New York is an international platform company that provides gold and jewelry buying, selling and trading. Its main goal is to help brands and retailers collect, manage and nationally order transactions.
             </p>
           </div>
 
           <div className="flex items-start">
             <span className="text-gray-900 font-bold mr-3 mt-1">•</span>
             <p className="text-base">
-              Aurate New York helps merchants conduct cross-border transactions, providing a system mechanism for greater mobility and faster transactions.
+              Juwelo New York helps merchants conduct cross-border transactions, providing a system mechanism for greater mobility and faster transactions.
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export default function AboutUs() {
           <div className="flex items-start">
             <span className="text-gray-900 font-bold mr-3 mt-1">•</span>
             <p className="text-base">
-              By displaying real user reviews, Aurate New York helps brands build trust and improve potential customers' purchasing decisions.
+              By displaying real user reviews, Juwelo New York helps brands build trust and improve potential customers' purchasing decisions.
             </p>
           </div>
 
@@ -69,7 +69,7 @@ export default function AboutUs() {
           <div className="flex items-start">
             <span className="text-gray-900 font-bold mr-3 mt-1">•</span>
             <p className="text-base">
-              Aurate New York can be integrated with agencies and marketing tools in different countries to help brands manage customer transactions in cross-border channels.
+              Juwelo New York can be integrated with agencies and marketing tools in different countries to help brands manage customer transactions in cross-border channels.
             </p>
           </div>
 

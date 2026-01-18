@@ -94,6 +94,7 @@ const Task: React.FC = () => {
     userType: user?.userType || "Normal",
     dailyProfit: user?.dailyProfit || 0,
     outOfBalance: user?.outOfBalance || 0,
+    completedOrdersCount: user?.completedOrdersCount || 0,
   };
 
   const handleStartClick = () => {
@@ -242,7 +243,7 @@ const Task: React.FC = () => {
         >
           Start{" "}
           <span className="text-gray-200 ms-2">
-            {userData?.data?.completedOrdersCount} / {userData?.data?.quantityOfOrders}
+            {userData?.data?.completedOrdersCount} / 25
           </span>
         </button>
       </div>

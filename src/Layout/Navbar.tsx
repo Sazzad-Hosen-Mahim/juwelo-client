@@ -56,6 +56,7 @@ const Navbar = () => {
     userType: user?.userType || "Normal",
     dailyProfit: user?.dailyProfit || 0,
     outOfBalance: user?.outOfBalance || 0,
+    completedOrdersCount: user?.completedOrdersCount || 0,
   };
 
   const toggleMobileMenu = () => {
