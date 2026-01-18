@@ -261,7 +261,7 @@ const Product: React.FC = () => {
                             className="py-4 px-6 bg-gray-200 cursor-pointer text-gray-900 rounded-lg font-semibold text-lg hover:bg-gray-300 transition-colors"
                             disabled={isConfirming}
                         >
-                            Earned Profit: {purchaseData?.data?.commission}
+                            Earned Profit: {formatCurrency(purchaseData?.data?.commission)}
                         </button>
                     )}
                 </div>
