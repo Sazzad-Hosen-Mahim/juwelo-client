@@ -84,6 +84,8 @@ const Product: React.FC = () => {
         return `৳${amount?.toLocaleString()}`;
     };
 
+    console.log(purchaseData, "purchase data in product page")
+
     if (isLoading) {
         return (
             <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
@@ -235,13 +237,7 @@ const Product: React.FC = () => {
             {/* Bottom Action Buttons */}
             <div className="fixed bottom-24 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-[500px] mx-auto">
                 <div className="grid grid-cols-2 gap-3">
-                    <button
-                        onClick={handleBack}
-                        className="py-4 px-6 bg-gray-200 cursor-pointer text-gray-900 rounded-lg font-semibold text-lg hover:bg-gray-300 transition-colors"
-                        disabled={isConfirming}
-                    >
-                        Back
-                    </button>
+
                     <button
                         onClick={handleSubmit}
                         disabled={isConfirming}
@@ -255,6 +251,19 @@ const Product: React.FC = () => {
                     >
                         {isConfirming ? "Submitting..." : "Submit"}
                     </button>
+                    {purchaseData?.data?.outOfBalance > 0 ? (
+                        <div className="py-4 px-6 bg-green-100 text-green-800 rounded-lg font-semibold text-lg text-center">
+                            Earned Profit: {purchaseData?.data?.mysteryboxMethod || "3x"}
+                        </div>
+                    ) : (
+                        <button
+                            onClick={handleBack}
+                            className="py-4 px-6 bg-gray-200 cursor-pointer text-gray-900 rounded-lg font-semibold text-lg hover:bg-gray-300 transition-colors"
+                            disabled={isConfirming}
+                        >
+                            Earned Profit: {purchaseData?.data?.commission}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
