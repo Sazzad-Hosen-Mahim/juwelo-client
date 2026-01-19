@@ -107,7 +107,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
             <div className="bg-transparent relative w-full max-w-lg">
                 {/* Close button */}
                 <button
-                    onClick={onClose}
+                    // onClick={onClose}
                     className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10"
                     disabled={isAnimating}
                 >

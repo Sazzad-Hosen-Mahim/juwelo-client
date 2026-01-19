@@ -136,7 +136,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-golden text-white text-xl font-bold p-2 rounded-md hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full cursor-pointer bg-golden text-white text-xl font-bold p-2 rounded-md hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing In..." : "Sign In"}
           </button>
@@ -149,7 +149,7 @@ const Login = () => {
           </p>
           <Link
             to="/signup"
-            className="w-full border-2 text-black border-black text-xl text-center font-bold p-2 rounded-md hover:border-golden hover:bg-golden hover:text-white transition-colors"
+            className="w-full cursor-pointer border-2 text-black border-black text-xl text-center font-bold p-2 rounded-md hover:border-golden hover:bg-golden hover:text-white transition-colors"
           >
             Register
           </Link>

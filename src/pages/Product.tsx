@@ -253,15 +253,18 @@ const Product: React.FC = () => {
                     </button>
                     {purchaseData?.data?.outOfBalance > 0 ? (
                         <div className="py-4 px-6 bg-green-100 text-green-800 rounded-lg font-semibold text-lg text-center">
-                            Earned Profit: {purchaseData?.data?.mysteryboxMethod || "3x"}
+                            <div className="flex flex-col items-center">
+                                <span>Earn Profit: {purchaseData?.data?.mysteryboxMethod || "3x"}</span>
+                                <span className="text-lg font-bold text-start">{formatCurrency(purchaseData?.data?.commission)}</span>
+                            </div>
                         </div>
                     ) : (
                         <button
-                            onClick={handleBack}
-                            className="py-4 px-6 bg-gray-200 cursor-pointer text-gray-900 rounded-lg font-semibold text-lg hover:bg-gray-300 transition-colors"
+                            // onClick={handleBack}
+                            className="py-4 px-6 bg-gray-200  text-gray-900 rounded-lg font-semibold text-lg transition-colors"
                             disabled={isConfirming}
                         >
-                            Earned Profit: {formatCurrency(purchaseData?.data?.commission)}
+                            Earn Profit: {formatCurrency(purchaseData?.data?.commission)}
                         </button>
                     )}
                 </div>
