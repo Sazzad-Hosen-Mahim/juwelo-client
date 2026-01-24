@@ -11,7 +11,7 @@ import { toast } from "sonner";
 // Schema: phone, captcha (4 digits), password, confirmPassword, invitationCode (optional), email
 const signupSchema = z
   .object({
-    phone: z.string().min(10, "Phone number must be at least 10 digits"),
+    phone: z.string().min(8, "Phone number must be at least 8 digits"),
     captcha: z
       .string()
       .min(4, "Enter the 4 digit verification code")
@@ -68,7 +68,7 @@ const Signup = () => {
         confirmPassword: data.confirmPassword,
         invitationCode: data.invitationCode,
       }).unwrap();
-
+      toast.success("Registration successful");
       navigate("/login");
     } catch (err: any) {
       toast.error(err?.data?.message)

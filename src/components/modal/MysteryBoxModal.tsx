@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Gift, X } from "lucide-react";
+import { X } from "lucide-react";
+import treasureOpen from "@/assets/treasure/opened-treasure-new.png"
+import treasureClosed from "@/assets/treasure/closed-treasure.png"
 
 interface MysteryBoxData {
     method: string;
@@ -142,7 +144,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                     disabled={selectedBox !== null || isAnimating}
                                     className={`
                                         relative w-32 h-32 transition-all duration-300 transform
-                                        ${!isRevealed ? "hover:scale-110" : ""}
+                                        ${!isRevealed ? "hover:scale-110 cursor-pointer" : "cursor-default"}
                                         ${isSelected && !isRevealed ? "scale-110 animate-bounce" : ""}
                                         ${selectedBox !== null && !isRevealed ? "opacity-50" : ""}
                                         ${isRevealed && revealed?.isWinning ? "scale-110" : ""}
@@ -150,35 +152,31 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                 >
                                     {!isRevealed ? (
                                         <div className="w-full h-full flex items-center justify-center">
-                                            <Gift
-                                                className={`w-24 h-24 text-red-500 drop-shadow-lg ${isSelected ? "animate-pulse" : ""
-                                                    }`}
-                                                fill="currentColor"
+                                            <img
+                                                src={treasureClosed}
+                                                alt="Closed Treasure"
+                                                className={`w-full h-full object-contain ${isSelected ? "animate-pulse" : ""}`}
                                             />
-                                            {/* Gift bow effect */}
-                                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1">
-                                                <div className="w-8 h-8 bg-yellow-400 rounded-full"></div>
-                                            </div>
                                         </div>
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <div
-                                                className={`
-                                                    w-full h-full flex flex-col items-center justify-center rounded-lg
-                                                    ${revealed?.isWinning
-                                                        ? "bg-green-500 bg-opacity-90"
-                                                        : "bg-gray-600 bg-opacity-90"
-                                                    }
-                                                `}
-                                            >
+                                        <div className="w-full h-full flex items-center justify-center relative">
+                                            <img
+                                                src={treasureOpen}
+                                                alt="Opened Treasure"
+                                                className="w-full h-full object-contain"
+                                            />
+                                            {/* Amount overlay */}
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center">
                                                 <div
-                                                    className={`text-3xl font-bold text-white ${revealed?.isWinning ? "animate-pulse" : ""
+                                                    className={`text-2xl font-bold ${revealed?.isWinning
+                                                        ? "text-yellow-400 animate-pulse bg-black/70 p-2 rounded-xl"
+                                                        : "text-white bg-black/70 p-2 rounded-xl"
                                                         }`}
                                                 >
                                                     {revealed?.amount}
                                                 </div>
                                                 {revealed?.isWinning && (
-                                                    <div className="text-sm text-white mt-2 font-semibold">
+                                                    <div className="text-xs text-yellow-400 mt-1 font-semibold">
                                                         YOU WIN!
                                                     </div>
                                                 )}

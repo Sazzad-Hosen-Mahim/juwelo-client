@@ -11,7 +11,7 @@ import { setCredentials } from "@/store/Slices/AuthSlice/authSlice";
 import { toast } from "sonner";
 
 const loginSchema = z.object({
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  phone: z.string().min(8, "Phone number must be at least 8 digits"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -56,9 +56,9 @@ const Login = () => {
 
       dispatch(setCredentials({
         user: {
-          userId: res.data.userId,     // ← now using real field
+          userId: res.data.userId,
           role: res.data.role,
-          email: res.data.email,    // ← remove or make optional
+          email: res.data.email,
           _id: res.data.user_id
         },
         token: res.data.accessToken,
@@ -75,7 +75,8 @@ const Login = () => {
         err?.data?.errorSources?.[0]?.message ||
         "Login failed. Please try again.";
 
-      toast.error(errorMessage);
+      // Show error in modal instead of toast
+      openModal("Login Failed", errorMessage);
     }
   };
 
