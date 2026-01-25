@@ -16,6 +16,7 @@ import {
   useRemoveMysteryRewardMutation
 } from "@/store/api/user/userApi";
 import { toast } from "sonner";
+import MiningOrderModal from "@/components/modal/MiningOrderModal";
 
 interface TaskItem {
   id: number;
@@ -64,6 +65,7 @@ const Task: React.FC = () => {
   const [openMysteryBoxModal, setOpenMysteryBoxModal] = useState(false);
   const [openMysteryRewardModal, setOpenMysteryRewardModal] = useState(false);
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
+  const [openMiningModal, setOpenMiningModal] = useState(false);
 
   // Fetch user data
   const id = localStorage.getItem("userId");
@@ -74,7 +76,7 @@ const Task: React.FC = () => {
 
   const user = userData?.data;
 
-  console.log(user, "mahim user")
+  // console.log(user, "mahim user")
 
   // Check for mystery reward on component mount
   useEffect(() => {
@@ -83,7 +85,7 @@ const Task: React.FC = () => {
     }
   }, [user]);
 
-  console.log(user, "userasdfasdfasdf")
+  // console.log(user, "userasdfasdfasdf")
 
   const accountDetailsData = {
     name: user?.name || "sajjadhosenmahim",
@@ -99,13 +101,19 @@ const Task: React.FC = () => {
   };
 
   const handleStartClick = () => {
+    // console.log(user.adminAssaignProductsOrRewards, "adminAssaignProductsOrRewards")
+
     // Check if user has admin assigned products with mystery box
     if (user?.adminAssaignProductsOrRewards && user.adminAssaignProductsOrRewards.length > 0) {
       const productWithMysteryBox = user.adminAssaignProductsOrRewards.find(
         (product: any) => product.mysterybox && product.mysterybox.method && product.mysterybox.amount
       );
+      const mysteryBoxOrderNumber = productWithMysteryBox?.orderNumber;
+      // console.log(mysteryBoxOrderNumber, "mysteryBoxOrderNumber")
+      // console.log(user?.completedOrdersCount, "++++++++++++")
 
-      if (productWithMysteryBox) {
+
+      if (mysteryBoxOrderNumber === user?.completedOrdersCount + 1) {
         setMysteryBoxData(productWithMysteryBox.mysterybox);
         setOpenMysteryBoxModal(true);
         return;
@@ -116,7 +124,11 @@ const Task: React.FC = () => {
     if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {
       setOpenPackageModal(true);
     } else {
-      navigate("/product");
+      setOpenMiningModal(true);
+      setTimeout(() => {
+        setOpenMiningModal(false);
+        navigate("/product");
+      }, 3000);
     }
   };
 
@@ -128,7 +140,7 @@ const Task: React.FC = () => {
       console.log("Package selected successfully:", amount);
     } catch (error) {
       console.error("Failed to update package:", error);
-      toast.error("Failed to update package");
+      toast.error((error as any)?.data?.message);
     }
   };
 
@@ -140,11 +152,11 @@ const Task: React.FC = () => {
       console.log("Mystery reward removed successfully");
     } catch (error) {
       console.error("Failed to remove mystery reward:", error);
-      toast.error("Failed to claim mystery reward");
+      toast.error((error as any)?.data?.message);
     }
   };
 
-  console.log(userData, "mahim");
+  // console.log(userData, "mahim");
 
   if (isLoading) {
     return (
@@ -286,6 +298,8 @@ const Task: React.FC = () => {
           onContinue={handleMysteryRewardContinue}
         />
       )}
+      {/* Mining Order Modal */}
+      <MiningOrderModal open={openMiningModal} />
 
       {/* Add padding at bottom to prevent content from being hidden behind fixed buttons */}
       <div className="h-32"></div>

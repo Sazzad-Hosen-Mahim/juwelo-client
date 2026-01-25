@@ -50,8 +50,8 @@ const CashOut = () => {
 
     // Check if withdrawal address is set
     const hasWithdrawalAddress = user.withdrawalAddressAndMethod !== null && user.withdrawalAddressAndMethod !== undefined;
-    const bankName = user.withdrawalAddressAndMethod?.BankName || "";
-    const withdrawalAddress = user.withdrawalAddressAndMethod?.withdrawalAddress || "";
+    const bankName = user.withdrawalAddressAndMethod?.bankName || "";
+    const bankAccountNumber = user.withdrawalAddressAndMethod?.bankAccountNumber?.toString() || "";
 
     // Mask the withdrawal address (show first 3 and last 4 digits)
     const maskAddress = (address: string) => {
@@ -133,7 +133,7 @@ const CashOut = () => {
                                         {hasWithdrawalAddress ? bankName : "Not Set"}
                                     </p>
                                     <p className="text-sm text-slate-600">
-                                        {hasWithdrawalAddress ? maskAddress(withdrawalAddress) : "Please bind account"}
+                                        {hasWithdrawalAddress ? maskAddress(bankAccountNumber) : "Please bind account"}
                                     </p>
                                 </div>
                             </div>

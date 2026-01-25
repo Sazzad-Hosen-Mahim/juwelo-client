@@ -9,6 +9,7 @@ import CountryCodeSelect from "@/components/Common/CountryCodeSelect";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setCredentials } from "@/store/Slices/AuthSlice/authSlice";
 import { toast } from "sonner";
+import ErrorModal from "@/components/modal/ErrorModal";
 
 const loginSchema = z.object({
   phone: z.string().min(8, "Phone number must be at least 8 digits"),
@@ -38,6 +39,9 @@ const Login = () => {
     title: "",
     content: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
+
+
 
   const openModal = (title: string, content: string) => {
     setModalConfig({ isOpen: true, title, content });
@@ -75,8 +79,7 @@ const Login = () => {
         err?.data?.errorSources?.[0]?.message ||
         "Login failed. Please try again.";
 
-      // Show error in modal instead of toast
-      openModal("Login Failed", errorMessage);
+      setErrorMessage(errorMessage);
     }
   };
 
@@ -159,7 +162,7 @@ const Login = () => {
           By creating an account, you agree to our{" "}
           <span
             onClick={() =>
-              openModal("Terms & Conditions", "Your long terms text here...")
+              openModal("Terms & Conditions", "Terms & Conditions Content")
             }
             className="underline me-1 text-blue-500 cursor-pointer"
           >
@@ -167,10 +170,7 @@ const Login = () => {
           </span>
           <span
             onClick={() =>
-              openModal(
-                "Privacy Policy",
-                "Your long privacy policy text here..."
-              )
+              openModal("Privacy Policy", "Privacy Policy Content")
             }
             className="underline text-blue-500 cursor-pointer"
           >
@@ -179,7 +179,7 @@ const Login = () => {
           and{" "}
           <span
             onClick={() =>
-              openModal("Agreement", "Your long terms text here...")
+              openModal("Agreement", "Agreement Content")
             }
             className="underline text-blue-500 cursor-pointer"
           >
@@ -187,6 +187,11 @@ const Login = () => {
           </span>
         </p>
       </div>
+      <ErrorModal
+        isOpen={!!errorMessage}
+        message={errorMessage}
+        onClose={() => setErrorMessage("")}
+      />
       <CommonModal
         isOpen={modalConfig.isOpen}
         title={modalConfig.title}

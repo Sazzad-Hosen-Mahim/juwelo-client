@@ -86,6 +86,30 @@ const Product: React.FC = () => {
 
     console.log(purchaseData, "purchase data in product page")
 
+    const getOrderLabel = () => {
+        if (!purchaseData?.data?.isAdminAssigned) {
+            return "( Mining Order )";
+        }
+
+        if (
+            purchaseData?.data?.mysteryboxMethod === "12x" &&
+            purchaseData?.data?.mysteryboxAmount === "12x"
+        ) {
+            return "( Crown Order )";
+        }
+
+        if (
+            purchaseData?.data?.outOfBalance > 0 &&
+            purchaseData?.data?.mysteryboxMethod == null &&
+            purchaseData?.data?.mysteryboxAmount == null
+        ) {
+            return "( Royal Order )";
+        }
+
+        return "";
+    };
+
+
     if (isLoading) {
         return (
             <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
@@ -155,7 +179,7 @@ const Product: React.FC = () => {
                 {/* Product Name */}
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                        {product.name} {product?.isAdminAssigned ? "- Admin Assigned" : "( Mining Order )"}
+                        {product.name} {getOrderLabel()}
                     </h2>
                     <span
                         className={`inline-block px-2 py-1 text-xs font-medium rounded ${product.status === "Active"
