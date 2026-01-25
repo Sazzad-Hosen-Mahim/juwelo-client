@@ -60,7 +60,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
 
         if (method === "cash") {
             // Cash reward (example: 500 – 5000)
-            const cash = Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+            const cash = Math.floor(Math.random() * (50000 - 500 + 1)) + 500;
             return `${cash}`;
         }
 
