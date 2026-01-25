@@ -57,6 +57,7 @@ const Navbar = () => {
     dailyProfit: user?.dailyProfit || 0,
     outOfBalance: user?.outOfBalance || 0,
     completedOrdersCount: user?.completedOrdersCount || 0,
+    trialRoundBalance: user?.trialRoundBalance || 0,
   };
 
   const toggleMobileMenu = () => {

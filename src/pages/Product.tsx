@@ -155,7 +155,7 @@ const Product: React.FC = () => {
                 {/* Product Name */}
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                        {product.name}
+                        {product.name} {product?.isAdminAssigned ? "- Admin Assigned" : "( Mining Order )"}
                     </h2>
                     <span
                         className={`inline-block px-2 py-1 text-xs font-medium rounded ${product.status === "Active"

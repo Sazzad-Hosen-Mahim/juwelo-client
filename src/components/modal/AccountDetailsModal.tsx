@@ -10,6 +10,7 @@ interface AccountDetails {
     dailyProfit: number;
     outOfBalance: number;
     completedOrdersCount: number;
+    trialRoundBalance: number;
 }
 
 interface AccountDetailsModalProps {
@@ -82,6 +83,10 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                             <p className="text-gray-700 font-semibold ">
                                 {data?.completedOrdersCount} / 25
                             </p>
+                        </div>
+                        <div>
+                            <p className="text-md text-gray-700 font-bold">Trial Amount</p>
+                            <p className="font-semibold text-green-500">{data?.trialRoundBalance}</p>
                         </div>
                     </div>
                 </div>

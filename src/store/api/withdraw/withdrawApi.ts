@@ -3,10 +3,17 @@
 import { baseApi } from "../baseApi";
 
 interface BindAccountPayload {
-    userId: string;
-    BankName: string;
-    withdrawalAddress: string;
+    userId: number;
+    name: string;
+    withdrawMethod: "BankTransfer" | "MobileBanking";
+    bankName?: string;
+    bankAccountNumber?: number;
+    branchName?: string;
+    district?: string;
+    mobileBankingName?: string;
+    mobileBankingAccountNumber?: number;
 }
+
 
 interface BindAccountResponse {
     success: boolean;
@@ -44,18 +51,18 @@ interface HistoryResponse {
 export const withdrawApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         bindAccount: builder.mutation<BindAccountResponse, BindAccountPayload>({
-            query: ({ userId, BankName, withdrawalAddress }) => ({
-                url: `/user/update-withdrawal-address/${userId}`,
-                method: "PATCH",
-                body: {
-                    BankName,
-                    withdrawalAddress,
-                },
-            }),
-            invalidatesTags: (userId) => [
-                { type: "Auth", id: Number(userId) },
-            ],
+            query: (payload) => {
+                const { userId, ...body } = payload;
+                console.log("API Body being sent:", body); // Debug log
+                return {
+                    url: `/user/update-withdrawal-address/${userId}`,
+                    method: "PATCH",
+                    body,
+                };
+            },
+            invalidatesTags: ["Auth"],
         }),
+
         createWithdraw: builder.mutation<CreateWithdrawResponse, CreateWithdrawPayload>({
             query: (payload) => ({
                 url: "/withdraw/create-withdraw",
