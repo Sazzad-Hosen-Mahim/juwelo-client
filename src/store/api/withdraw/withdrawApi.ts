@@ -43,6 +43,31 @@ interface HistoryItem {
     __v: number;
 }
 
+interface SingleHistoryItem {
+    _id: string;
+    userId: string;
+    transactionStatus: string;
+    superiorUserName: string;
+    BankName: string;
+    withdrawalAddress: string;
+    withdrawalAmount: number;
+    withdrawalFee: number;
+    actualAmount: number;
+    totalRechargeAmount: number;
+    totalWithdrawalAmount: number;
+    applicationTime: string;
+    processingTime: string;
+    reviewRemark: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
+
+interface SingleHistoryResponse {
+    success: boolean;
+    data: SingleHistoryItem;
+}
+
 interface HistoryResponse {
     success: boolean;
     data: HistoryItem[];
@@ -78,11 +103,19 @@ export const withdrawApi = baseApi.injectEndpoints({
             }),
             providesTags: ["History"],
         }),
+        getSingleWithdrawHistory: builder.query<SingleHistoryResponse, { userId: number }>({
+            query: ({ userId }) => ({
+                url: `/withdraw/getSingleUserWithdraws/${userId}`,
+                method: "GET",
+            }),
+            providesTags: ["History"],
+        }),
     }),
 });
 
 export const {
     useBindAccountMutation,
     useCreateWithdrawMutation,
-    useGetHistoryQuery
+    useGetHistoryQuery,
+    useGetSingleWithdrawHistoryQuery
 } = withdrawApi;

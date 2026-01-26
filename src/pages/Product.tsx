@@ -3,11 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useConfirmPurchaseOrderMutation, useGetPurchaseOrderQuery } from "@/store/api/user/userApi";
 import { toast } from "sonner";
+import SubmitOrderModal from "@/components/modal/SubmitOrderModal";
+
 
 
 const Product: React.FC = () => {
     const navigate = useNavigate();
     const [userId, setUserId] = useState<number | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleModalOpen = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+    };
 
     // Get userId from localStorage
     useEffect(() => {
@@ -49,6 +60,7 @@ const Product: React.FC = () => {
     };
 
     const handleSubmit = async () => {
+        handleModalOpen();
         if (!userId || !product?.productId) return;
 
         try {
@@ -162,11 +174,11 @@ const Product: React.FC = () => {
             )}
 
             {/* Product Image */}
-            <div className="w-full aspect-square bg-gray-100 overflow-hidden">
+            <div className="w-full h-[300px] object-contain bg-gray-100 overflow-hidden">
                 <img
                     src={product.poster}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                         e.currentTarget.src =
                             "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect fill='%23e5e7eb' width='400' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-size='20'%3ENo Image%3C/text%3E%3C/svg%3E";
@@ -263,7 +275,7 @@ const Product: React.FC = () => {
                 <div className="grid grid-cols-2 gap-3">
 
                     <button
-                        onClick={handleSubmit}
+                        onClick={handleModalOpen}
                         disabled={isConfirming}
                         className={`
               py-4 px-6 rounded-lg font-semibold cursor-pointer text-lg transition-colors
@@ -273,7 +285,7 @@ const Product: React.FC = () => {
                             }
             `}
                     >
-                        {isConfirming ? "Submitting..." : "Submit"}
+                        Submit Order
                     </button>
                     {purchaseData?.data?.outOfBalance > 0 ? (
                         <div className="py-4 px-6 bg-green-100 text-green-800 rounded-lg font-semibold text-lg text-center">
@@ -293,6 +305,7 @@ const Product: React.FC = () => {
                     )}
                 </div>
             </div>
+            <SubmitOrderModal isOpen={isModalOpen} onClose={handleModalClose} onSubmit={handleSubmit} isConfirming={isConfirming} />
         </div>
     );
 };

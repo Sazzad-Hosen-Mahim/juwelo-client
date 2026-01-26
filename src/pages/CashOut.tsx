@@ -8,9 +8,12 @@ import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
 
 const CashOut = () => {
     const [amount, setAmount] = useState("");
+
+    const navigate = useNavigate()
 
     // Get current user ID from auth state
     // Adjust this selector based on your actual auth state structure
@@ -89,6 +92,7 @@ const CashOut = () => {
             if (result.success) {
                 toast.success(result.message || "Withdrawal request created successfully");
                 setAmount("");
+                navigate("/index");
             } else {
                 toast.error(result.message || "Failed to create withdrawal request");
             }

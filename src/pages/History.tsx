@@ -1,12 +1,12 @@
-import { useGetHistoryQuery } from '@/store/api/withdraw/withdrawApi';
+import { useGetHistoryQuery, useGetSingleWithdrawHistoryQuery } from '@/store/api/withdraw/withdrawApi';
 import { useState } from 'react';
 
-type HistoryType = 'checkIn' | 'withdraw' | 'recharge';
+type HistoryType = 'withdraw' | 'other';
 
 interface HistoryItem {
     _id: string;
     userId: string;
-    historyType: HistoryType;
+    historyType: 'checkIn' | 'withdraw' | 'recharge';
     amount: number;
     time: string;
     createdAt: string;
@@ -15,35 +15,61 @@ interface HistoryItem {
 }
 
 const History = () => {
-    const [activeTab, setActiveTab] = useState<HistoryType>('checkIn');
+    const [activeTab, setActiveTab] = useState<HistoryType>('withdraw');
+    const [subTab, setSubTab] = useState<'checkIn' | 'recharge'>('checkIn');
 
-    // Replace with actual userId from your auth state
     const id = localStorage.getItem("mongodbId");
     const userId = id ? id : "";
-    const { data, isLoading, error } = useGetHistoryQuery({
-        userId,
-        historyType: activeTab
-    });
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+    const singleWithdrawId = localStorage.getItem("userId");
+    const singleWithdrawUserId = singleWithdrawId ? parseInt(singleWithdrawId, 10) : 0;
+
+    // Fetch withdraw history using the new API
+    const {
+        data: withdrawData,
+        isLoading: withdrawLoading,
+        error: withdrawError
+    } = useGetSingleWithdrawHistoryQuery(
+        { userId: singleWithdrawUserId },
+        { skip: activeTab !== 'withdraw' || !singleWithdrawUserId }
+    );
+
+    // Fetch checkIn/recharge history using the old API
+    const {
+        data: otherData,
+        isLoading: otherLoading,
+        error: otherError
+    } = useGetHistoryQuery(
+        { userId, historyType: subTab },
+        { skip: activeTab !== 'other' }
+    );
+
+    const formatDate = (dateString: string | undefined) => {
+        if (!dateString) return 'N/A';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return 'Invalid Date';
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch {
+            return 'Invalid Date';
+        }
     };
 
-    const formatAmount = (amount: number) => {
+    const formatAmount = (amount: number | undefined) => {
+        if (amount === undefined || amount === null || isNaN(amount)) return '$0.00';
         return amount.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD'
         });
     };
 
-    const getHistoryIcon = (type: HistoryType) => {
+    const getHistoryIcon = (type: 'checkIn' | 'withdraw' | 'recharge') => {
         switch (type) {
             case 'checkIn':
                 return '✓';
@@ -54,7 +80,7 @@ const History = () => {
         }
     };
 
-    const getHistoryColor = (type: HistoryType) => {
+    const getHistoryColor = (type: 'checkIn' | 'withdraw' | 'recharge') => {
         switch (type) {
             case 'checkIn':
                 return 'text-blue-600';
@@ -66,30 +92,58 @@ const History = () => {
     };
 
     const tabs: { label: string; value: HistoryType }[] = [
-        { label: 'Check In', value: 'checkIn' },
         { label: 'Withdraw', value: 'withdraw' },
+        { label: 'Check In & Recharge', value: 'other' }
+    ];
+
+    const subTabs: { label: string; value: 'checkIn' | 'recharge' }[] = [
+        { label: 'Check In', value: 'checkIn' },
         { label: 'Recharge', value: 'recharge' }
     ];
+
+    const isLoading = activeTab === 'withdraw' ? withdrawLoading : otherLoading;
+    const error = activeTab === 'withdraw' ? withdrawError : otherError;
+    const hasData = activeTab === 'withdraw'
+        ? withdrawData?.data
+        : otherData?.data && otherData.data.length > 0;
 
     return (
         <div className="max-w-4xl mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6 text-gray-800">Transaction History</h1>
 
-            {/* Tabs */}
+            {/* Main Tabs */}
             <div className="flex border-b border-gray-200 mb-6">
                 {tabs.map((tab) => (
                     <button
                         key={tab.value}
                         onClick={() => setActiveTab(tab.value)}
                         className={`px-6 py-3 font-medium text-sm transition-colors ${activeTab === tab.value
-                            ? 'border-b-2 border-blue-500 text-blue-600'
-                            : 'text-gray-600 hover:text-gray-800'
+                                ? 'border-b-2 border-blue-500 text-blue-600'
+                                : 'text-gray-600 hover:text-gray-800'
                             }`}
                     >
                         {tab.label}
                     </button>
                 ))}
             </div>
+
+            {/* Sub Tabs for Check In & Recharge */}
+            {activeTab === 'other' && (
+                <div className="flex border-b border-gray-200 mb-6">
+                    {subTabs.map((tab) => (
+                        <button
+                            key={tab.value}
+                            onClick={() => setSubTab(tab.value)}
+                            className={`px-6 py-3 font-medium text-sm transition-colors ${subTab === tab.value
+                                    ? 'border-b-2 border-green-500 text-green-600'
+                                    : 'text-gray-600 hover:text-gray-800'
+                                }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {/* Content */}
             <div className="bg-white rounded-lg shadow">
@@ -99,32 +153,93 @@ const History = () => {
                     </div>
                 )}
 
-                {/* {error && (
-                    <div className="p-6 text-center text-red-600">
+                {/* {!isLoading && error && (
+                    <div className="p-12 text-center text-red-500">
                         <p className="text-lg font-semibold">Error loading history</p>
                         <p className="text-sm mt-2">Please try again later</p>
                     </div>
                 )} */}
 
-                {!isLoading && !error && data?.data && data.data.length === 0 && (
+                {!isLoading && !error && !hasData && (
                     <div className="p-12 text-center text-gray-500">
                         <p className="text-lg font-semibold">No transactions found</p>
-                        <p className="text-sm mt-2">You haven't made any {activeTab} transactions yet</p>
+                        <p className="text-sm mt-2">
+                            You haven't made any {activeTab === 'withdraw' ? 'withdraw' : subTab} transactions yet
+                        </p>
                     </div>
                 )}
 
-                {!isLoading && !error && data?.data && data.data.length > 0 && (
+                {/* Withdraw History (Single Item) */}
+                {!isLoading && !error && activeTab === 'withdraw' && withdrawData?.data && (
                     <div className="divide-y divide-gray-100">
-                        {data.data.map((item: HistoryItem) => (
+                        <div className="p-4 hover:bg-gray-50 transition-colors">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100">
+                                        <span className="text-xl text-red-600">↓</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-gray-800">Withdraw</p>
+                                        <p className="text-sm text-gray-500">
+                                            {formatDate(withdrawData.data.applicationTime)}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-lg font-bold text-red-600">
+                                        -{formatAmount(withdrawData.data.withdrawalAmount)}
+                                    </p>
+                                    <span className={`text-xs px-2 py-1 rounded ${withdrawData.data.transactionStatus === 'completed'
+                                            ? 'bg-green-100 text-green-800'
+                                            : withdrawData.data.transactionStatus === 'pending'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-gray-100 text-gray-800'
+                                        }`}>
+                                        {withdrawData.data.transactionStatus || 'Unknown'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Additional Withdraw Details */}
+                            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
+                                <div>
+                                    <p className="text-xs text-gray-500">Bank Name</p>
+                                    <p className="font-medium">{withdrawData.data.BankName || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500">Withdrawal Fee</p>
+                                    <p className="font-medium">{formatAmount(withdrawData.data.withdrawalFee)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500">Actual Amount</p>
+                                    <p className="font-medium">{formatAmount(withdrawData.data.actualAmount)}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500">Processing Time</p>
+                                    <p className="font-medium">{formatDate(withdrawData.data.processingTime)}</p>
+                                </div>
+                                {withdrawData.data.reviewRemark && (
+                                    <div className="col-span-2">
+                                        <p className="text-xs text-gray-500">Review Remark</p>
+                                        <p className="font-medium">{withdrawData.data.reviewRemark}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Check In & Recharge History (Multiple Items) */}
+                {!isLoading && !error && activeTab === 'other' && otherData?.data && otherData.data.length > 0 && (
+                    <div className="divide-y divide-gray-100">
+                        {otherData.data.map((item: HistoryItem) => (
                             <div
                                 key={item._id}
                                 className="p-4 hover:bg-gray-50 transition-colors"
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-4">
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${activeTab === 'checkIn' ? 'bg-blue-100' :
-                                            activeTab === 'withdraw' ? 'bg-red-100' :
-                                                'bg-green-100'
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.historyType === 'checkIn' ? 'bg-blue-100' : 'bg-green-100'
                                             }`}>
                                             <span className={`text-xl ${getHistoryColor(item.historyType)}`}>
                                                 {getHistoryIcon(item.historyType)}
@@ -141,8 +256,7 @@ const History = () => {
                                     </div>
                                     <div className="text-right">
                                         <p className={`text-lg font-bold ${getHistoryColor(item.historyType)}`}>
-                                            {item.historyType === 'withdraw' ? '-' : '+'}
-                                            {formatAmount(item.amount)}
+                                            +{formatAmount(item.amount)}
                                         </p>
                                     </div>
                                 </div>

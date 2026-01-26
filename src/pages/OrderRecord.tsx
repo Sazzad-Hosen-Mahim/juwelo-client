@@ -151,8 +151,8 @@ const OrderRecord = () => {
                                     </div>
 
                                     {/* Continue Button */}
-                                    <button className="w-full mt-4 bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 transition-colors">
-                                        CONTINUE
+                                    <button className="w-full mt-4 bg-black text-white py-3 rounded-md font-medium  transition-colors">
+                                        Completed
                                     </button>
                                 </div>
                             </div>
