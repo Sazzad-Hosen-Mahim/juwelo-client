@@ -13,10 +13,13 @@ import MysteryBoxRewardModal from "@/components/modal/MysteryBoxRewardModal";
 import {
   useGetSingleUserQuery,
   useUpdateSelectedPackageMutation,
-  useRemoveMysteryRewardMutation
+  useRemoveMysteryRewardMutation,
+  useGetPurchaseOrderQuery,
+  useMarkMysteryBoxAsSeenMutation
 } from "@/store/api/user/userApi";
 import { toast } from "sonner";
 import MiningOrderModal from "@/components/modal/MiningOrderModal";
+import ErrorModal from "@/components/modal/ErrorModal";
 
 interface TaskItem {
   id: number;
@@ -67,16 +70,25 @@ const Task: React.FC = () => {
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
   const [openMiningModal, setOpenMiningModal] = useState(false);
 
+  const [openErrorModal, setOpenErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [shouldCheckOrder, setShouldCheckOrder] = useState(false);
+
   // Fetch user data
   const id = localStorage.getItem("userId");
   const userId = id ? parseInt(id) : 0;
   const { data: userData, isLoading } = useGetSingleUserQuery(userId);
   const [updatePackage, { isLoading: isUpdating }] = useUpdateSelectedPackageMutation();
   const [removeMysteryReward] = useRemoveMysteryRewardMutation();
+  const [markMysteryBoxAsSeen] = useMarkMysteryBoxAsSeenMutation();
+
+  // Add the purchase order query to check for errors
+  const { data: purchaseOrderData, error: purchaseOrderError, isLoading: isPurchaseOrderLoading, refetch } = useGetPurchaseOrderQuery(userId, {
+    refetchOnMountOrArgChange: true,
+    // skip: !shouldCheckOrder,
+  });
 
   const user = userData?.data;
-
-  // console.log(user, "mahim user")
 
   // Check for mystery reward on component mount
   useEffect(() => {
@@ -85,7 +97,42 @@ const Task: React.FC = () => {
     }
   }, [user]);
 
-  // console.log(user, "userasdfasdfasdf")
+  useEffect(() => {
+    refetch();
+  }, []);
+
+  // Check purchase order response for errors
+  useEffect(() => {
+    if (shouldCheckOrder && !isPurchaseOrderLoading) {
+      if (purchaseOrderData?.data?.success === false) {
+        // Backend returned success: true but data.success: false
+        setOpenMiningModal(false);
+        setErrorMessage(purchaseOrderData.data.message || "Unable to process order");
+        setOpenErrorModal(true);
+        setShouldCheckOrder(false);
+      } else if (purchaseOrderData?.success === false) {
+        // Backend returned success: false
+        setOpenMiningModal(false);
+        setErrorMessage(purchaseOrderData.message || "Unable to process order");
+        setOpenErrorModal(true);
+        setShouldCheckOrder(false);
+      } else if (purchaseOrderError) {
+        // Network or other error
+        setOpenMiningModal(false);
+        const errorData = purchaseOrderError as any;
+        setErrorMessage(errorData?.data?.data?.message || errorData?.data?.message || "Unable to process order");
+        setOpenErrorModal(true);
+        setShouldCheckOrder(false);
+      } else if (purchaseOrderData?.success === true && purchaseOrderData?.data?.success !== false) {
+        // Success - navigate after delay
+        setTimeout(() => {
+          setOpenMiningModal(false);
+          setShouldCheckOrder(false);
+          navigate("/product");
+        }, 3000);
+      }
+    }
+  }, [shouldCheckOrder, isPurchaseOrderLoading, purchaseOrderData, purchaseOrderError, navigate]);
 
   const accountDetailsData = {
     name: user?.name || "sajjadhosenmahim",
@@ -101,20 +148,22 @@ const Task: React.FC = () => {
   };
 
   const handleStartClick = () => {
-    // console.log(user.adminAssaignProductsOrRewards, "adminAssaignProductsOrRewards")
-
     // Check if user has admin assigned products with mystery box
     if (user?.adminAssaignProductsOrRewards && user.adminAssaignProductsOrRewards.length > 0) {
       const productWithMysteryBox = user.adminAssaignProductsOrRewards.find(
-        (product: any) => product.mysterybox && product.mysterybox.method && product.mysterybox.amount
+        (product: any) =>
+          product.mysterybox &&
+          product.mysterybox.method &&
+          product.mysterybox.amount &&
+          product.mysterybox.seenTheReward === false // Only show if not seen
       );
       const mysteryBoxOrderNumber = productWithMysteryBox?.orderNumber;
-      // console.log(mysteryBoxOrderNumber, "mysteryBoxOrderNumber")
-      // console.log(user?.completedOrdersCount, "++++++++++++")
-
 
       if (mysteryBoxOrderNumber === user?.completedOrdersCount + 1) {
-        setMysteryBoxData(productWithMysteryBox.mysterybox);
+        setMysteryBoxData({
+          ...productWithMysteryBox.mysterybox,
+          productId: productWithMysteryBox.productId // Store productId for marking as seen
+        });
         setOpenMysteryBoxModal(true);
         return;
       }
@@ -124,11 +173,9 @@ const Task: React.FC = () => {
     if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {
       setOpenPackageModal(true);
     } else {
+      // Open mining modal and trigger order check
       setOpenMiningModal(true);
-      setTimeout(() => {
-        setOpenMiningModal(false);
-        navigate("/product");
-      }, 3000);
+      setShouldCheckOrder(true);
     }
   };
 
@@ -155,8 +202,6 @@ const Task: React.FC = () => {
       toast.error((error as any)?.data?.message);
     }
   };
-
-  // console.log(userData, "mahim");
 
   if (isLoading) {
     return (
@@ -280,7 +325,19 @@ const Task: React.FC = () => {
       {mysteryBoxData && (
         <MysteryBoxModal
           open={openMysteryBoxModal}
-          onClose={() => {
+          onClose={async () => {
+            // Mark mystery box as seen when user claims it
+            if (mysteryBoxData.productId) {
+              try {
+                await markMysteryBoxAsSeen({
+                  userId,
+                  productId: mysteryBoxData.productId
+                }).unwrap();
+                console.log("Mystery box marked as seen");
+              } catch (error) {
+                console.error("Failed to mark mystery box as seen:", error);
+              }
+            }
             setOpenMysteryBoxModal(false);
             setMysteryBoxData(null);
             navigate("/product");
@@ -300,6 +357,12 @@ const Task: React.FC = () => {
       )}
       {/* Mining Order Modal */}
       <MiningOrderModal open={openMiningModal} />
+      {/* Error Modal */}
+      <ErrorModal
+        isOpen={openErrorModal}
+        message={errorMessage}
+        onClose={() => setOpenErrorModal(false)}
+      />
 
       {/* Add padding at bottom to prevent content from being hidden behind fixed buttons */}
       <div className="h-32"></div>
@@ -307,4 +370,4 @@ const Task: React.FC = () => {
   );
 };
 
-export default Task;
+export default Task;  

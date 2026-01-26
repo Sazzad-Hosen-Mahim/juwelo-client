@@ -53,8 +53,24 @@ const CashOut = () => {
 
     // Check if withdrawal address is set
     const hasWithdrawalAddress = user.withdrawalAddressAndMethod !== null && user.withdrawalAddressAndMethod !== undefined;
-    const bankName = user.withdrawalAddressAndMethod?.bankName || "";
-    const bankAccountNumber = user.withdrawalAddressAndMethod?.bankAccountNumber?.toString() || "";
+
+    // Determine withdrawal method type
+    const withdrawalMethod = user.withdrawalAddressAndMethod?.withdrawMethod;
+    const isBankTransfer = withdrawalMethod === "BankTransfer";
+    const isMobileBanking = withdrawalMethod === "MobileBanking";
+
+    // Get appropriate details based on method
+    const displayName = isBankTransfer
+        ? user.withdrawalAddressAndMethod?.bankName || ""
+        : isMobileBanking
+            ? user.withdrawalAddressAndMethod?.mobileBankingName || ""
+            : "";
+
+    const displayAccountNumber = isBankTransfer
+        ? user.withdrawalAddressAndMethod?.bankAccountNumber?.toString() || ""
+        : isMobileBanking
+            ? user.withdrawalAddressAndMethod?.mobileBankingAccountNumber?.toString() || ""
+            : "";
 
     // Mask the withdrawal address (show first 3 and last 4 digits)
     const maskAddress = (address: string) => {
@@ -130,14 +146,16 @@ const CashOut = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="bg-yellow-100 p-2 rounded">
-                                    <span className="text-2xl">🏦</span>
+                                    <span className="text-2xl">
+                                        {isMobileBanking ? "📱" : "🏦"}
+                                    </span>
                                 </div>
                                 <div>
                                     <p className="font-medium text-slate-900">
-                                        {hasWithdrawalAddress ? bankName : "Not Set"}
+                                        {hasWithdrawalAddress ? displayName : "Not Set"}
                                     </p>
                                     <p className="text-sm text-slate-600">
-                                        {hasWithdrawalAddress ? maskAddress(bankAccountNumber) : "Please bind account"}
+                                        {hasWithdrawalAddress ? maskAddress(displayAccountNumber) : "Please bind account"}
                                     </p>
                                 </div>
                             </div>

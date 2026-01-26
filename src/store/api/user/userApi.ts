@@ -31,8 +31,7 @@ export const userApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
             providesTags: ["Auth"],
-            // Force refetch on every mount/navigation
-            keepUnusedDataFor: 0,
+            // refetchOnMountOrArgChange: true
         }),
 
         // Confirm purchase order
@@ -72,6 +71,18 @@ export const userApi = baseApi.injectEndpoints({
             }),
             providesTags: ["Auth"],
         }),
+
+        // Mark mystery box as seen
+        markMysteryBoxAsSeen: builder.mutation<
+            any,
+            { userId: number; productId: number }
+        >({
+            query: ({ userId, productId }) => ({
+                url: `/user/mark-mystery-box-seen/${userId}/${productId}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["Auth"],
+        }),
     }),
 });
 
@@ -83,4 +94,5 @@ export const {
     useRemoveMysteryRewardMutation,
     useClaimCheckInRewardMutation,
     useGetUserCompletedProductsQuery,
+    useMarkMysteryBoxAsSeenMutation,
 } = userApi;
