@@ -18,7 +18,7 @@ import {
   useMarkMysteryBoxAsSeenMutation
 } from "@/store/api/user/userApi";
 import { toast } from "sonner";
-// import MiningOrderModal from "@/components/modal/MiningOrderModal";
+import MiningOrderModal from "@/components/modal/MiningOrderModal";
 import ErrorModal from "@/components/modal/ErrorModal";
 
 interface TaskItem {
@@ -69,7 +69,7 @@ const Task: React.FC = () => {
   const [openMysteryRewardModal, setOpenMysteryRewardModal] = useState(false);
   const [activeMysteryReward, setActiveMysteryReward] = useState<number | null>(null);
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
-  // const [openMiningModal, setOpenMiningModal] = useState(false);
+  const [openMiningModal, setOpenMiningModal] = useState(false);
 
   const [openErrorModal, setOpenErrorModal] = useState(false);
   const [errorMessage] = useState("");
@@ -186,7 +186,8 @@ const Task: React.FC = () => {
       setShouldCheckOrder(true);
     }
 
-    navigate("/product")
+    // navigate("/product")
+    setOpenMiningModal(true)
   };
 
   const handlePackageSelection = async (amount: number) => {
@@ -377,7 +378,7 @@ const Task: React.FC = () => {
         />
       )}
       {/* Mining Order Modal */}
-      {/* <MiningOrderModal open={openMiningModal} /> */}
+      <MiningOrderModal open={openMiningModal} setOpen={setOpenMiningModal} />
       {/* Error Modal */}
       <ErrorModal
         isOpen={openErrorModal}

@@ -3,15 +3,19 @@ import { useNavigate } from "react-router-dom";
 
 interface MiningOrderModalProps {
     open: boolean;
+    setOpen: (open: boolean) => void;
 }
 
-const MiningOrderModal: React.FC<MiningOrderModalProps> = ({ open }) => {
+const MiningOrderModal: React.FC<MiningOrderModalProps> = ({ open, setOpen }) => {
     if (!open) return null;
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate("/product");
+        setTimeout(() => {
+            navigate("/product");
+            setOpen(false);
+        }, 3000);
     }, []);
 
     return (
