@@ -9,9 +9,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
+import ConfirmWithdrawPasswordModal from "@/components/modal/ConfirmWithdrawPasswordModal";
 
 const CashOut = () => {
     const [amount, setAmount] = useState("");
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     const navigate = useNavigate()
 
@@ -27,6 +29,32 @@ const CashOut = () => {
 
     // Create withdraw mutation
     const [createWithdraw, { isLoading: isCreatingWithdraw }] = useCreateWithdrawMutation();
+
+    const user = userData?.data;
+
+    const handleConfirmWithPassword = async (password: string) => {
+        if (!user) return;
+
+        const withdrawAmount = Number(amount);
+
+        try {
+            const result = await createWithdraw({
+                userId: user.userId,
+                amount: withdrawAmount,
+                withdrawPassword: password,
+            }).unwrap();
+
+            if (result.success) {
+                toast.success(result.message || "Withdrawal request created successfully");
+                setAmount("");
+                navigate("/index");
+            } else {
+                toast.error(result.message || "Failed to create withdrawal request");
+            }
+        } catch (error: any) {
+            toast.error(error?.data?.message || "Failed to create withdrawal request");
+        }
+    };
 
     // Loading state
     if (isLoadingUser) {
@@ -48,8 +76,6 @@ const CashOut = () => {
             </div>
         );
     }
-
-    const user = userData.data;
 
     // Check if withdrawal address is set
     const hasWithdrawalAddress = user.withdrawalAddressAndMethod !== null && user.withdrawalAddressAndMethod !== undefined;
@@ -81,7 +107,7 @@ const CashOut = () => {
         return `${first}${masked}${last}`;
     };
 
-    const handleSellOut = async () => {
+    const handleSellOutClick = () => {
         if (!hasWithdrawalAddress) {
             toast.error("Please set up your withdrawal address first");
             return;
@@ -89,8 +115,8 @@ const CashOut = () => {
 
         const withdrawAmount = Number(amount);
 
-        if (!amount || isNaN(withdrawAmount) || withdrawAmount <= 0) {
-            toast.error("Please enter a valid amount");
+        if (!amount || isNaN(withdrawAmount) || withdrawAmount < 500) {
+            toast.error("Minimum Sell Out is ৳500");
             return;
         }
 
@@ -99,22 +125,14 @@ const CashOut = () => {
             return;
         }
 
-        try {
-            const result = await createWithdraw({
-                userId: user.userId,
-                amount: withdrawAmount,
-            }).unwrap();
-
-            if (result.success) {
-                toast.success(result.message || "Withdrawal request created successfully");
-                setAmount("");
-                navigate("/index");
-            } else {
-                toast.error(result.message || "Failed to create withdrawal request");
-            }
-        } catch (error: any) {
-            toast.error(error?.data?.message || "Failed to create withdrawal request");
+        // Check if withdraw password is set
+        if (!user.withdrawPassword) {
+            navigate("/withdraw-password");
+            return;
         }
+
+        // Open confirmation modal
+        setIsPasswordModalOpen(true);
     };
 
     return (
@@ -190,7 +208,8 @@ const CashOut = () => {
 
             {/* Tips */}
             <Card className="bg-slate-50 border-slate-200">
-                <CardContent className="pt-4">
+                <CardContent className="pt-1">
+                    <p className="text-xs font-medium text-slate-800 mb-2">Rules : Minimum Sell Out ৳500</p>
                     <p className="text-xs font-medium text-slate-700 mb-1">Tips:</p>
                     <p className="text-xs text-slate-600 leading-relaxed">
                         Please bind in the correct bank account information. If the Sell Out is successful
@@ -202,9 +221,9 @@ const CashOut = () => {
 
             {/* Sell Out Button */}
             <Button
-                onClick={handleSellOut}
+                onClick={handleSellOutClick}
                 disabled={!hasWithdrawalAddress || isCreatingWithdraw}
-                className="w-full h-12 text-white font-medium bg-black hover:bg-slate-800"
+                className="w-full h-12 text-white font-medium bg-black hover:bg-slate-800 cursor-pointer disabled:cursor-not-allowed"
             >
                 {isCreatingWithdraw ? (
                     <>
@@ -215,6 +234,12 @@ const CashOut = () => {
                     "Sell Out"
                 )}
             </Button>
+
+            <ConfirmWithdrawPasswordModal
+                isOpen={isPasswordModalOpen}
+                onClose={() => setIsPasswordModalOpen(false)}
+                onConfirm={handleConfirmWithPassword}
+            />
         </div>
     );
 };

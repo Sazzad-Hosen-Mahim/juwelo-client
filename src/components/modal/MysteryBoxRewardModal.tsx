@@ -108,7 +108,7 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
                 {/* Close button */}
                 <button
                     // onClick={onClose}
-                    className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10"
+                    className="absolute -top-12 right-0 text-white/50 hover:text-white transition-colors z-10"
                     disabled={isAnimating}
                 >
                     <X className="w-8 h-8" />
@@ -123,7 +123,7 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
                         </h2>
                         <p className="text-gray-300 text-lg">
                             {selectedBox === null
-                                ? "Choose your mystery box"
+                                ? "Choose Your Supreme Box"
                                 : "Congratulations!"}
                         </p>
                     </div>
@@ -172,7 +172,7 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
                                                         : "text-white bg-black/70"
                                                         }`}
                                                 >
-                                                    {revealed?.amount}
+                                                    ৳{revealed?.amount}
                                                 </div>
                                                 {revealed?.isWinning && (
                                                     <div className="text-xs text-yellow-400 mt-1 font-semibold">
@@ -195,7 +195,7 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
                                     Your Prize
                                 </p>
                                 <p className="text-yellow-400 text-4xl font-bold">
-                                    ₹{mysteryReward.toLocaleString()}
+                                    ৳{mysteryReward.toLocaleString()}
                                 </p>
                             </div>
                             <button

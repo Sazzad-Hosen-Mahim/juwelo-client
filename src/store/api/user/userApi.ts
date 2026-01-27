@@ -83,6 +83,16 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Auth"],
         }),
+
+        // Update withdraw password
+        updateWithdrawPassword: builder.mutation({
+            query: ({ userId, withdrawPassword }: { userId: number; withdrawPassword: string }) => ({
+                url: `/user/update-withdraw-password/${userId}`,
+                method: "PATCH",
+                body: { withdrawPassword },
+            }),
+            invalidatesTags: ["Auth"],
+        }),
     }),
 });
 
@@ -95,4 +105,5 @@ export const {
     useClaimCheckInRewardMutation,
     useGetUserCompletedProductsQuery,
     useMarkMysteryBoxAsSeenMutation,
+    useUpdateWithdrawPasswordMutation,
 } = userApi;

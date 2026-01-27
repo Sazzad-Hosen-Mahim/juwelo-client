@@ -24,6 +24,7 @@ interface BindAccountResponse {
 interface CreateWithdrawPayload {
     userId: number;
     amount: number;
+    withdrawPassword: string;
 }
 
 interface CreateWithdrawResponse {

@@ -126,7 +126,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                 {/* Close button */}
                 <button
                     // onClick={onClose}
-                    className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10"
+                    className="absolute -top-12 right-0 text-white/50 hover:text-white transition-colors z-10"
                     disabled={isAnimating}
                 >
                     <X className="w-8 h-8" />
@@ -141,7 +141,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                         </h2>
                         <p className="text-gray-300 text-lg">
                             {selectedBox === null
-                                ? "Choose your mystery box"
+                                ? "Choose Your Supreme Box"
                                 : "Congratulations!"}
                         </p>
                     </div>
@@ -189,7 +189,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                                         : "text-white bg-black/70 p-2 rounded-xl"
                                                         }`}
                                                 >
-                                                    {revealed?.amount}
+                                                    ৳{revealed?.amount}
                                                 </div>
                                                 {revealed?.isWinning && (
                                                     <div className="text-xs text-yellow-400 mt-1 font-semibold">
@@ -212,7 +212,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                     Your Prize
                                 </p>
                                 <p className="text-yellow-400 text-4xl font-bold">
-                                    {mysteryBoxData.amount}
+                                    ৳{mysteryBoxData.amount}
                                 </p>
                             </div>
                             <button
@@ -228,9 +228,9 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                     {selectedBox === null && (
                         <div className="text-center text-gray-300 text-base">
                             <p className="font-medium">Pick a box to reveal your reward!</p>
-                            <p className="text-sm mt-2 opacity-75">
+                            {/* <p className="text-sm mt-2 opacity-75">
                                 Method: {mysteryBoxData.method.toUpperCase()}
-                            </p>
+                            </p> */}
                         </div>
                     )}
                 </div>

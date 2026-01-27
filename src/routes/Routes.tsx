@@ -18,6 +18,7 @@ import CashOut from "@/pages/CashOut";
 import History from "@/pages/History";
 import Help from "@/pages/Help";
 import Score from "@/pages/Score";
+import WithdrawPassword from "@/pages/WithdrawPassword";
 
 const routes = createBrowserRouter([
   {
@@ -91,6 +92,10 @@ const routes = createBrowserRouter([
       {
         path: "/cash-out",
         element: <CashOut />,
+      },
+      {
+        path: "/withdraw-password",
+        element: <WithdrawPassword />,
       },
 
     ],

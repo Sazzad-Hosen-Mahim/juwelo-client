@@ -29,7 +29,7 @@ const ErrorModal = ({ isOpen, message, onClose }: ErrorModalProps) => {
 
                 {/* Message */}
                 <div className="pr-8">
-                    <p className="text-gray-800 text-lg">{message}</p>
+                    <p className="text-lg text-red-500">{message}</p>
                 </div>
             </div>
         </div>

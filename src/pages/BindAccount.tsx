@@ -8,6 +8,7 @@ const BindAccount = () => {
     const id = localStorage.getItem("userId");
     const userId = id ? parseInt(id) : 0;
     const { data: userData } = useGetSingleUserQuery(userId);
+    console.log(userData, "user data in bind account")
 
     const [name, setName] = useState("");
     const [accountType, setAccountType] = useState<"BankTransfer" | "MobileBanking" | "">("");
@@ -22,17 +23,47 @@ const BindAccount = () => {
     const [provider, setProvider] = useState("");
     const [mobileNumber, setMobileNumber] = useState("");
 
+    const navigate = useNavigate();
+
+    // Check if user already has withdrawal address and method
+    const hasWithdrawalAddress = userData?.data?.withdrawalAddressAndMethod &&
+        Object.keys(userData.data.withdrawalAddressAndMethod).length > 0;
+
     useEffect(() => {
         if (userData?.data?.name) {
             setName(userData.data.name);
         }
-    }, [userData]);
 
-    const navigate = useNavigate();
+        // Pre-fill form with existing withdrawal address data if available
+        if (hasWithdrawalAddress) {
+            const withdrawalData = userData.data.withdrawalAddressAndMethod;
+
+            if (withdrawalData.withdrawMethod) {
+                setAccountType(withdrawalData.withdrawMethod);
+            }
+
+            if (withdrawalData.withdrawMethod === "BankTransfer") {
+                if (withdrawalData.bankName) setBankName(withdrawalData.bankName);
+                if (withdrawalData.bankAccountNumber) setAccountNumber(withdrawalData.bankAccountNumber.toString());
+                if (withdrawalData.branchName) setBranchName(withdrawalData.branchName);
+                if (withdrawalData.district) setDistrictName(withdrawalData.district);
+            } else if (withdrawalData.withdrawMethod === "MobileBanking") {
+                if (withdrawalData.mobileBankingName) setProvider(withdrawalData.mobileBankingName);
+                if (withdrawalData.mobileBankingAccountNumber) setMobileNumber(withdrawalData.mobileBankingAccountNumber.toString());
+                if (withdrawalData.mobileUserDistrict) setDistrictName(withdrawalData.mobileUserDistrict);
+            }
+        }
+    }, [userData, hasWithdrawalAddress]);
 
     const [bindAccount, { isLoading, isError }] = useBindAccountMutation();
 
     const handleSubmit = async () => {
+        // If user already has withdrawal address, navigate to cashout
+        if (hasWithdrawalAddress) {
+            navigate("/cash-out");
+            return;
+        }
+
         if (!accountType) {
             toast.error("Please select an account type");
             return;
@@ -74,6 +105,7 @@ const BindAccount = () => {
                 ...payload,
                 mobileBankingName: provider,
                 mobileBankingAccountNumber: Number(mobileNumber),
+                mobileUserDistrict: districtName,
             };
         }
 
@@ -125,7 +157,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">Bank Name *</label>
                         <input
                             type="text"
-                            placeholder="e.g., DBBL, City Bank"
+                            placeholder=""
                             value={bankName}
                             onChange={(e) => setBankName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -145,7 +177,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">Branch Name</label>
                         <input
                             type="text"
-                            placeholder="e.g., Dhanmondi"
+                            placeholder=""
                             value={branchName}
                             onChange={(e) => setBranchName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -155,7 +187,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">District *</label>
                         <input
                             type="text"
-                            placeholder="e.g., Dhaka, Chittagong"
+                            placeholder=""
                             value={districtName}
                             onChange={(e) => setDistrictName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -171,7 +203,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">Provider *</label>
                         <input
                             type="text"
-                            placeholder="e.g., bKash, Nagad, Rocket"
+                            placeholder=""
                             value={provider}
                             onChange={(e) => setProvider(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -181,9 +213,19 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">Mobile Number *</label>
                         <input
                             type="tel"
-                            placeholder="Enter mobile number"
+                            placeholder=""
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value)}
+                            className="w-full border px-3 py-2 rounded"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">District *</label>
+                        <input
+                            type="text"
+                            placeholder=""
+                            value={districtName}
+                            onChange={(e) => setDistrictName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
                         />
                     </div>
