@@ -8,8 +8,11 @@ const Score = () => {
 
     console.log(userId, "score userId");
 
-    const { data, isLoading } = useGetSingleUserQuery(userId);
-    const score = data?.data?.score || 0;
+    const { data: userData, isLoading } = useGetSingleUserQuery(userId, {
+        skip: !userId,
+        refetchOnMountOrArgChange: true,
+    });
+    const score = userData?.data?.score || 0;
 
     // Calculate rotation angle for the needle based on score (0-100)
     // 0 points = -90deg (left), 100 points = 90deg (right)

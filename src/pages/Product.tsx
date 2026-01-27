@@ -287,10 +287,16 @@ const Product: React.FC = () => {
                     >
                         Submit Order
                     </button>
-                    {purchaseData?.data?.outOfBalance > 0 ? (
+                    {purchaseData?.data?.mysteryboxMethod ? (
                         <div className="py-4 px-6 bg-green-100 text-green-800 rounded-lg font-semibold text-lg text-center">
                             <div className="flex flex-col items-center">
-                                <span>Earn Profit: {purchaseData?.data?.mysteryboxMethod || "3x"}</span>
+                                {purchaseData?.data?.mysteryboxMethod === "12x" ? (
+                                    <span>Earn Profit: <span className="text-2xl">12x</span></span>
+                                ) : purchaseData?.data?.mysteryboxMethod === "cash" ? (
+                                    <span>Earn Profit: <span className="text-2xl">Cash</span></span>
+                                ) : (
+                                    <span>Earn Profit: <span className="text-2xl">3x</span></span>
+                                )}
                                 <span className="text-lg font-bold text-start">{formatCurrency(purchaseData?.data?.commission)}</span>
                             </div>
                         </div>

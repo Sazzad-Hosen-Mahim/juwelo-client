@@ -22,6 +22,7 @@ export default function CheckIn() {
 
     const { data: userData, isLoading } = useGetSingleUserQuery(userId, {
         skip: !userId,
+        refetchOnMountOrArgChange: true,
     });
 
     const [claimReward, { isLoading: isClaiming }] = useClaimCheckInRewardMutation();

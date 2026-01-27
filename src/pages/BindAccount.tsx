@@ -7,7 +7,9 @@ import { toast } from "sonner";
 const BindAccount = () => {
     const id = localStorage.getItem("userId");
     const userId = id ? parseInt(id) : 0;
-    const { data: userData } = useGetSingleUserQuery(userId);
+    const { data: userData } = useGetSingleUserQuery(userId, {
+        refetchOnMountOrArgChange: true,
+    });
     console.log(userData, "user data in bind account")
 
     const [name, setName] = useState("");

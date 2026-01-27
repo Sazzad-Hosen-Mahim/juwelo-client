@@ -43,6 +43,7 @@ const Navbar = () => {
   const userId = id ? parseInt(id) : 0;
   const { data: userData } = useGetSingleUserQuery(userId, {
     skip: !isAuthenticated || !userId,
+    refetchOnMountOrArgChange: true,
   });
 
   const user = userData?.data;

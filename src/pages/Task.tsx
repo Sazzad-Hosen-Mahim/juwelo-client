@@ -14,11 +14,11 @@ import {
   useGetSingleUserQuery,
   useUpdateSelectedPackageMutation,
   useRemoveMysteryRewardMutation,
-  useGetPurchaseOrderQuery,
+  // useGetPurchaseOrderQuery,
   useMarkMysteryBoxAsSeenMutation
 } from "@/store/api/user/userApi";
 import { toast } from "sonner";
-import MiningOrderModal from "@/components/modal/MiningOrderModal";
+// import MiningOrderModal from "@/components/modal/MiningOrderModal";
 import ErrorModal from "@/components/modal/ErrorModal";
 
 interface TaskItem {
@@ -69,11 +69,11 @@ const Task: React.FC = () => {
   const [openMysteryRewardModal, setOpenMysteryRewardModal] = useState(false);
   const [activeMysteryReward, setActiveMysteryReward] = useState<number | null>(null);
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
-  const [openMiningModal, setOpenMiningModal] = useState(false);
+  // const [openMiningModal, setOpenMiningModal] = useState(false);
 
   const [openErrorModal, setOpenErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [shouldCheckOrder, setShouldCheckOrder] = useState(false);
+  const [errorMessage] = useState("");
+  const [, setShouldCheckOrder] = useState(false);
 
   // Fetch user data
   const id = localStorage.getItem("userId");
@@ -84,10 +84,10 @@ const Task: React.FC = () => {
   const [markMysteryBoxAsSeen] = useMarkMysteryBoxAsSeenMutation();
 
   // Add the purchase order query to check for errors
-  const { data: purchaseOrderData, error: purchaseOrderError, isLoading: isPurchaseOrderLoading, refetch } = useGetPurchaseOrderQuery(userId, {
-    refetchOnMountOrArgChange: true,
-    // skip: !shouldCheckOrder,
-  });
+  // const { data: purchaseOrderData, error: purchaseOrderError, isLoading: isPurchaseOrderLoading } = useGetPurchaseOrderQuery(userId, {
+  //   // refetchOnMountOrArgChange: true,
+  //   // skip: !shouldCheckOrder,
+  // });
 
   const user = userData?.data;
 
@@ -99,42 +99,42 @@ const Task: React.FC = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
 
   // Check purchase order response for errors
-  useEffect(() => {
-    if (shouldCheckOrder && !isPurchaseOrderLoading) {
-      if (purchaseOrderData?.data?.success === false) {
-        // Backend returned success: true but data.success: false
-        setOpenMiningModal(false);
-        setErrorMessage(purchaseOrderData.data.message || "Unable to process order");
-        setOpenErrorModal(true);
-        setShouldCheckOrder(false);
-      } else if (purchaseOrderData?.success === false) {
-        // Backend returned success: false
-        setOpenMiningModal(false);
-        setErrorMessage(purchaseOrderData.message || "Unable to process order");
-        setOpenErrorModal(true);
-        setShouldCheckOrder(false);
-      } else if (purchaseOrderError) {
-        // Network or other error
-        setOpenMiningModal(false);
-        const errorData = purchaseOrderError as any;
-        setErrorMessage(errorData?.data?.data?.message || errorData?.data?.message || "Unable to process order");
-        setOpenErrorModal(true);
-        setShouldCheckOrder(false);
-      } else if (purchaseOrderData?.success === true && purchaseOrderData?.data?.success !== false) {
-        // Success - navigate after delay
-        setTimeout(() => {
-          setOpenMiningModal(false);
-          setShouldCheckOrder(false);
-          navigate("/product");
-        }, 3000);
-      }
-    }
-  }, [shouldCheckOrder, isPurchaseOrderLoading, purchaseOrderData, purchaseOrderError, navigate]);
+  // useEffect(() => {
+  //   if (shouldCheckOrder && !isPurchaseOrderLoading) {
+  //     if (purchaseOrderData?.data?.success === false) {
+  //       // Backend returned success: true but data.success: false
+  //       setOpenMiningModal(false);
+  //       setErrorMessage(purchaseOrderData.data.message || "Unable to process order");
+  //       setOpenErrorModal(true);
+  //       setShouldCheckOrder(false);
+  //     } else if (purchaseOrderData?.success === false) {
+  //       // Backend returned success: false
+  //       setOpenMiningModal(false);
+  //       setErrorMessage(purchaseOrderData.message || "Unable to process order");
+  //       setOpenErrorModal(true);
+  //       setShouldCheckOrder(false);
+  //     } else if (purchaseOrderError) {
+  //       // Network or other error
+  //       setOpenMiningModal(false);
+  //       const errorData = purchaseOrderError as any;
+  //       setErrorMessage(errorData?.data?.data?.message || errorData?.data?.message || "Unable to process order");
+  //       setOpenErrorModal(true);
+  //       setShouldCheckOrder(false);
+  //     } else if (purchaseOrderData?.success === true && purchaseOrderData?.data?.success !== false) {
+  //       // Success - navigate after delay
+  //       setTimeout(() => {
+  //         setOpenMiningModal(false);
+  //         setShouldCheckOrder(false);
+  //         navigate("/product");
+  //       }, 3000);
+  //     }
+  //   }
+  // }, [shouldCheckOrder, isPurchaseOrderLoading, purchaseOrderData, purchaseOrderError, navigate]);
 
   const accountDetailsData = {
     name: user?.name || "sajjadhosenmahim",
@@ -150,6 +150,12 @@ const Task: React.FC = () => {
   };
 
   const handleStartClick = () => {
+    // setOpenMiningModal(true)
+    // setTimeout(() => {
+    //   setOpenMiningModal(false)
+    //   navigate("/product")
+    // }, 3000)
+    // navigate("/product")
     // Check if user has admin assigned products with mystery box
     if (user?.adminAssaignProductsOrRewards && user.adminAssaignProductsOrRewards.length > 0) {
       const productWithMysteryBox = user.adminAssaignProductsOrRewards.find(
@@ -176,9 +182,11 @@ const Task: React.FC = () => {
       setOpenPackageModal(true);
     } else {
       // Open mining modal and trigger order check
-      setOpenMiningModal(true);
+      // setOpenMiningModal(true);
       setShouldCheckOrder(true);
     }
+
+    navigate("/product")
   };
 
   const handlePackageSelection = async (amount: number) => {
@@ -203,6 +211,8 @@ const Task: React.FC = () => {
       console.error("Failed to remove mystery reward:", error);
       toast.error((error as any)?.data?.message);
     }
+
+
   };
 
   if (isLoading) {
@@ -367,7 +377,7 @@ const Task: React.FC = () => {
         />
       )}
       {/* Mining Order Modal */}
-      <MiningOrderModal open={openMiningModal} />
+      {/* <MiningOrderModal open={openMiningModal} /> */}
       {/* Error Modal */}
       <ErrorModal
         isOpen={openErrorModal}

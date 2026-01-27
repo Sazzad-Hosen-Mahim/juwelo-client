@@ -118,8 +118,8 @@ const History = () => {
                         key={tab.value}
                         onClick={() => setActiveTab(tab.value)}
                         className={`px-6 py-3 font-medium text-sm transition-colors ${activeTab === tab.value
-                                ? 'border-b-2 border-blue-500 text-blue-600'
-                                : 'text-gray-600 hover:text-gray-800'
+                            ? 'border-b-2 border-blue-500 text-blue-600'
+                            : 'text-gray-600 hover:text-gray-800'
                             }`}
                     >
                         {tab.label}
@@ -135,8 +135,8 @@ const History = () => {
                             key={tab.value}
                             onClick={() => setSubTab(tab.value)}
                             className={`px-6 py-3 font-medium text-sm transition-colors ${subTab === tab.value
-                                    ? 'border-b-2 border-green-500 text-green-600'
-                                    : 'text-gray-600 hover:text-gray-800'
+                                ? 'border-b-2 border-green-500 text-green-600'
+                                : 'text-gray-600 hover:text-gray-800'
                                 }`}
                         >
                             {tab.label}
@@ -190,10 +190,10 @@ const History = () => {
                                         -{formatAmount(withdrawData.data.withdrawalAmount)}
                                     </p>
                                     <span className={`text-xs px-2 py-1 rounded ${withdrawData.data.transactionStatus === 'completed'
-                                            ? 'bg-green-100 text-green-800'
-                                            : withdrawData.data.transactionStatus === 'pending'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-gray-100 text-gray-800'
+                                        ? 'bg-green-100 text-green-800'
+                                        : withdrawData.data.transactionStatus === 'pending'
+                                            ? 'bg-yellow-100 text-yellow-800'
+                                            : 'bg-gray-100 text-gray-800'
                                         }`}>
                                         {withdrawData.data.transactionStatus || 'Unknown'}
                                     </span>
@@ -206,18 +206,18 @@ const History = () => {
                                     <p className="text-xs text-gray-500">Bank Name</p>
                                     <p className="font-medium">{withdrawData.data.BankName || 'N/A'}</p>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <p className="text-xs text-gray-500">Withdrawal Fee</p>
                                     <p className="font-medium">{formatAmount(withdrawData.data.withdrawalFee)}</p>
-                                </div>
+                                </div> */}
                                 <div>
                                     <p className="text-xs text-gray-500">Actual Amount</p>
                                     <p className="font-medium">{formatAmount(withdrawData.data.actualAmount)}</p>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <p className="text-xs text-gray-500">Processing Time</p>
                                     <p className="font-medium">{formatDate(withdrawData.data.processingTime)}</p>
-                                </div>
+                                </div> */}
                                 {withdrawData.data.reviewRemark && (
                                     <div className="col-span-2">
                                         <p className="text-xs text-gray-500">Review Remark</p>

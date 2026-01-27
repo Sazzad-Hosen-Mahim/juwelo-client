@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface MiningOrderModalProps {
     open: boolean;
@@ -6,6 +7,12 @@ interface MiningOrderModalProps {
 
 const MiningOrderModal: React.FC<MiningOrderModalProps> = ({ open }) => {
     if (!open) return null;
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        navigate("/product");
+    }, []);
 
     return (
         <div className="fixed inset-0 bg-black/60  flex items-center justify-center z-50">

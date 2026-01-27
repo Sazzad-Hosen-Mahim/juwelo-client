@@ -25,6 +25,7 @@ const CashOut = () => {
     // Fetch current user data
     const { data: userData, isLoading: isLoadingUser, error: userError } = useGetSingleUserQuery(currentUserId!, {
         skip: !currentUserId,
+        refetchOnMountOrArgChange: true,
     });
 
     // Create withdraw mutation

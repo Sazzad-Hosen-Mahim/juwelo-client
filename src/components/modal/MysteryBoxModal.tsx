@@ -189,7 +189,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                                         : "text-white bg-black/70 p-2 rounded-xl"
                                                         }`}
                                                 >
-                                                    ৳{revealed?.amount}
+                                                    {mysteryBoxData.method === "cash" ? "৳" : ""}{revealed?.amount}
                                                 </div>
                                                 {revealed?.isWinning && (
                                                     <div className="text-xs text-yellow-400 mt-1 font-semibold">
@@ -212,7 +212,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                     Your Prize
                                 </p>
                                 <p className="text-yellow-400 text-4xl font-bold">
-                                    ৳{mysteryBoxData.amount}
+                                    {mysteryBoxData.method === "cash" ? "৳" : ""}{mysteryBoxData.amount}
                                 </p>
                             </div>
                             <button
