@@ -215,7 +215,7 @@ const Product: React.FC = () => {
                     <div className="flex justify-between items-center">
                         <span className="text-gray-600 font-medium">Commission:</span>
                         <span className="text-lg font-semibold text-green-600">
-                            +{formatCurrency(product.commission)}
+                            +{purchaseData?.data?.isAdminAssigned === true ? formatCurrency(purchaseData?.data?.commission) : formatCurrency(purchaseData?.data?.product?.commission)}
                         </span>
                     </div>
 

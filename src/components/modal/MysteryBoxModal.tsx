@@ -126,7 +126,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                 {/* Close button */}
                 <button
                     // onClick={onClose}
-                    className="absolute -top-12 right-0 text-white/50 hover:text-white transition-colors z-10"
+                    className="absolute -top-12 right-0 text-white/20 hover:text-white/30 transition-colors z-10"
                     disabled={isAnimating}
                 >
                     <X className="w-8 h-8" />
@@ -137,7 +137,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                     {/* Header */}
                     <div className="text-center mb-8">
                         <h2 className="text-4xl font-bold text-white mb-2">
-                            Mystery Box!
+                            Supreme Box!
                         </h2>
                         <p className="text-gray-300 text-lg">
                             {selectedBox === null
@@ -217,7 +217,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                             </div>
                             <button
                                 onClick={onClose}
-                                className="w-full max-w-xs mx-auto py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-lg rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all transform hover:scale-105 shadow-lg"
+                                className="w-full cursor-pointer max-w-xs mx-auto py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-lg rounded-lg hover:from-yellow-500 hover:to-orange-600 transition-all transform hover:scale-105 shadow-lg"
                             >
                                 Continue
                             </button>

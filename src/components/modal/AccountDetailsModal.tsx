@@ -28,6 +28,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
 
     console.log(data, "mahimmmm")
 
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 ">
             <div className="w-full max-w-md bg-white rounded-xl shadow-md">
@@ -58,15 +59,13 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                             <p className="font-medium">{data.quantityOfOrders}</p>
                         </div> */}
 
-
-
                         <div>
                             <p className="text-md text-gray-700 font-bold">Available Balance</p>
-                            <p className="font-semibold text-gray-700">{data.userBalance}</p>
+                            <p className="font-semibold text-gray-700">{data.userBalance.toFixed(2)}</p>
                         </div>
                         <div>
                             <p className="text-md text-gray-700 font-bold">Daily Profit</p>
-                            <p className="font-semibold text-gray-700">{data?.dailyProfit}</p>
+                            <p className="font-semibold text-gray-700">{data?.dailyProfit.toFixed(2)}</p>
                         </div>
 
                         {/* <div>
@@ -76,7 +75,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
 
                         <div>
                             <p className="text-md text-gray-700 font-bold">Insufficient Balance</p>
-                            <p className="font-semibold text-red-500">{data?.outOfBalance}</p>
+                            <p className={`font-semibold ${data?.outOfBalance > 0 ? "text-red-500" : "text-gray-700"}`}>{data?.outOfBalance.toFixed(2)}</p>
                         </div>
                         <div>
                             <p className="text-md text-gray-700 font-bold">Current Grab Order</p>
@@ -86,7 +85,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                         </div>
                         <div>
                             <p className="text-md text-gray-700 font-bold">Trial Amount</p>
-                            <p className="font-semibold text-green-500">{data?.trialRoundBalance}</p>
+                            <p className="font-semibold text-gray-700">{data?.trialRoundBalance.toFixed(2)}</p>
                         </div>
                     </div>
                 </div>

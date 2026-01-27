@@ -67,6 +67,7 @@ const Task: React.FC = () => {
   const [openPackageModal, setOpenPackageModal] = useState(false);
   const [openMysteryBoxModal, setOpenMysteryBoxModal] = useState(false);
   const [openMysteryRewardModal, setOpenMysteryRewardModal] = useState(false);
+  const [activeMysteryReward, setActiveMysteryReward] = useState<number | null>(null);
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
   const [openMiningModal, setOpenMiningModal] = useState(false);
 
@@ -93,6 +94,7 @@ const Task: React.FC = () => {
   // Check for mystery reward on component mount
   useEffect(() => {
     if (user && user.mysteryReward && user.mysteryReward > 0) {
+      setActiveMysteryReward(user.mysteryReward);
       setOpenMysteryRewardModal(true);
     }
   }, [user]);
@@ -347,11 +349,20 @@ const Task: React.FC = () => {
       )}
 
       {/* Mystery Reward Modal (for global mystery reward) */}
-      {user && user.mysteryReward > 0 && (
+      {activeMysteryReward && (
         <MysteryBoxRewardModal
           open={openMysteryRewardModal}
-          onClose={() => setOpenMysteryRewardModal(false)}
-          mysteryReward={user.mysteryReward}
+          onClose={async () => {
+            try {
+              await removeMysteryReward(userId).unwrap();
+              console.log("Mystery reward removed successfully");
+            } catch (error) {
+              console.error("Failed to remove mystery reward:", error);
+            }
+            setOpenMysteryRewardModal(false);
+            setActiveMysteryReward(null);
+          }}
+          mysteryReward={activeMysteryReward}
           onContinue={handleMysteryRewardContinue}
         />
       )}
