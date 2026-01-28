@@ -31,6 +31,7 @@ export const userApi = baseApi.injectEndpoints({
                 method: "GET",
             }),
             providesTags: ["Auth"],
+            keepUnusedDataFor: 0,
             // refetchOnMountOrArgChange: true
         }),
 

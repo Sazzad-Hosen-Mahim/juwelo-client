@@ -34,12 +34,15 @@ const Product: React.FC = () => {
     const {
         data: purchaseData,
         isLoading,
+        isFetching,
         error,
         refetch,
     } = useGetPurchaseOrderQuery(userId!, {
         skip: !userId,
         // Force refetch on component mount
         refetchOnMountOrArgChange: true,
+        refetchOnFocus: false,        // NEW: Don't refetch when tab gains focus
+        refetchOnReconnect: false,
     });
 
     const [confirmPurchase, { isLoading: isConfirming }] =
@@ -122,7 +125,7 @@ const Product: React.FC = () => {
     };
 
 
-    if (isLoading) {
+    if (isLoading || isFetching) {
         return (
             <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
                 <div className="text-center">
