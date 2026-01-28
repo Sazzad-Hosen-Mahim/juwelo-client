@@ -11,6 +11,13 @@ export const userApi = baseApi.injectEndpoints({
             providesTags: (userId) => [
                 { type: "Auth", id: userId },
             ],
+            keepUnusedDataFor: 0, // Don't cache for long periods
+            // Refetch whenever the component mounts or arguments change
+            // refetchOnMountOrArgChange: true,
+            // // Optionally refetch when window regains focus (useful for admin updates)
+            // refetchOnFocus: true,
+            // // Refetch when network reconnects
+            // refetchOnReconnect: true
         }),
 
         // Update selected package amount

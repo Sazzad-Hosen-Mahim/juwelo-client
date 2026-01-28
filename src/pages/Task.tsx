@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import MiningOrderModal from "@/components/modal/MiningOrderModal";
 import ErrorModal from "@/components/modal/ErrorModal";
+import ErrorModalBlack from "@/components/modal/ErrorModalBlack";
 
 interface TaskItem {
   id: number;
@@ -70,15 +71,27 @@ const Task: React.FC = () => {
   const [activeMysteryReward, setActiveMysteryReward] = useState<number | null>(null);
   const [mysteryBoxData, setMysteryBoxData] = useState<any>(null);
   const [openMiningModal, setOpenMiningModal] = useState(false);
+  // const [openTrialModal, setOpenTrialModal] = useState(false);
 
   const [openErrorModal, setOpenErrorModal] = useState(false);
-  const [errorMessage] = useState("");
+  const [errorMessage,] = useState("");
+  const [errorMessageBlack, setErrorMessageBlack] = useState("");
+  const [openErrorModalBlack, setOpenErrorModalBlack] = useState(false);
   const [, setShouldCheckOrder] = useState(false);
 
   // Fetch user data
   const id = localStorage.getItem("userId");
   const userId = id ? parseInt(id) : 0;
-  const { data: userData, isLoading } = useGetSingleUserQuery(userId);
+
+  const { data: userData, isLoading,
+    isFetching,
+    refetch } = useGetSingleUserQuery(userId, {
+      refetchOnMountOrArgChange: true,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    });
+
+
   const [updatePackage, { isLoading: isUpdating }] = useUpdateSelectedPackageMutation();
   const [removeMysteryReward] = useRemoveMysteryRewardMutation();
   const [markMysteryBoxAsSeen] = useMarkMysteryBoxAsSeenMutation();
@@ -90,6 +103,12 @@ const Task: React.FC = () => {
   // });
 
   const user = userData?.data;
+
+  useEffect(() => {
+    if (userId) {
+      refetch();
+    }
+  }, [userId, refetch]);
 
   // Check for mystery reward on component mount
   useEffect(() => {
@@ -149,14 +168,18 @@ const Task: React.FC = () => {
     trialRoundBalance: user?.trialRoundBalance || 0,
   };
 
+  console.log(user, "aaaaayaaaat")
+
+  // useEffect(() => {
+  //   if ((user?.orderRound?.round === "trial") && (user?.completedOrdersCount === 25) && (user?.trialRoundBalance === 0)) {
+  //     setErrorMessage("You have successfully completed all snatched orders. Please proceed with your withdrawal request immediately. Thank you!");
+  //     setOpenErrorModal(true);
+  //   }
+  // }, [user])
+
   const handleStartClick = () => {
-    // setOpenMiningModal(true)
-    // setTimeout(() => {
-    //   setOpenMiningModal(false)
-    //   navigate("/product")
-    // }, 3000)
-    // navigate("/product")
     // Check if user has admin assigned products with mystery box
+    refetch();
     if (user?.adminAssaignProductsOrRewards && user.adminAssaignProductsOrRewards.length > 0) {
       const productWithMysteryBox = user.adminAssaignProductsOrRewards.find(
         (product: any) =>
@@ -177,17 +200,21 @@ const Task: React.FC = () => {
       }
     }
 
-    // Check if user has selected package (0 means not selected)
-    if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {
-      setOpenPackageModal(true);
-    } else {
-      // Open mining modal and trigger order check
-      // setOpenMiningModal(true);
-      setShouldCheckOrder(true);
+    if ((user?.orderRound?.round === "trial" || "round_one") && (user?.completedOrdersCount === 25) && (user?.trialRoundBalance === 0)) {
+      setErrorMessageBlack("You have successfully completed all snatched orders. Please proceed with your withdrawal request immediately. Thank you!");
+      setOpenErrorModalBlack(true);
+      return;
     }
 
-    // navigate("/product")
-    setOpenMiningModal(true)
+    // Check if user has selected package (0 means not selected)
+    if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {
+      // Only open package modal, don't open mining modal
+      setOpenPackageModal(true);
+    } else {
+      // User has selected package, open mining modal and trigger order check
+      setOpenMiningModal(true);
+      setShouldCheckOrder(true);
+    }
   };
 
   const handlePackageSelection = async (amount: number) => {
@@ -196,6 +223,10 @@ const Task: React.FC = () => {
       setOpenPackageModal(false);
       toast.success("Package selected successfully");
       console.log("Package selected successfully:", amount);
+
+      // After package selection, show mining modal and proceed with normal flow
+      setOpenMiningModal(true);
+      setShouldCheckOrder(true);
     } catch (error) {
       console.error("Failed to update package:", error);
       toast.error((error as any)?.data?.message);
@@ -216,7 +247,7 @@ const Task: React.FC = () => {
 
   };
 
-  if (isLoading) {
+  if (isLoading && !userData) {
     return (
       <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
         <div className="text-center">
@@ -227,8 +258,16 @@ const Task: React.FC = () => {
     );
   }
 
+
+
   return (
-    <div className="max-w-[500px] mx-auto bg-white h-auto">
+    <div className="max-w-[500px] mx-auto bg-white h-auto relative">
+      {/* Optional: Loading Overlay for Background Refetches */}
+      {isFetching && userData && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white text-center py-1 text-sm max-w-[500px] mx-auto">
+          Checking for updates...
+        </div>
+      )}
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center text-sm text-gray-600 mb-3">
@@ -384,6 +423,11 @@ const Task: React.FC = () => {
         isOpen={openErrorModal}
         message={errorMessage}
         onClose={() => setOpenErrorModal(false)}
+      />
+      <ErrorModalBlack
+        isOpen={openErrorModalBlack}
+        message={errorMessageBlack}
+        onClose={() => setOpenErrorModalBlack(false)}
       />
 
       {/* Add padding at bottom to prevent content from being hidden behind fixed buttons */}

@@ -103,22 +103,21 @@ const Product: React.FC = () => {
 
     const getOrderLabel = () => {
         if (!purchaseData?.data?.isAdminAssigned) {
-            return "( Mining Order )";
+            return "(Mining Order)";
         }
 
         if (
             purchaseData?.data?.mysteryboxMethod === "12x" &&
             purchaseData?.data?.mysteryboxAmount === "12x"
         ) {
-            return "( Crown Order )";
+            return "(Crown Order)";
         }
 
         if (
             purchaseData?.data?.outOfBalance > 0 &&
-            purchaseData?.data?.mysteryboxMethod == null &&
-            purchaseData?.data?.mysteryboxAmount == null
+            purchaseData?.data?.mysteryboxMethod == "3x"
         ) {
-            return "( Royal Order )";
+            return "(Royal Order)";
         }
 
         return "";

@@ -6,7 +6,7 @@ interface ErrorModalProps {
     onClose: () => void;
 }
 
-const ErrorModal = ({ isOpen, message, onClose }: ErrorModalProps) => {
+const ErrorModalBlack = ({ isOpen, message, onClose }: ErrorModalProps) => {
     if (!isOpen) return null;
 
     return (
@@ -29,11 +29,11 @@ const ErrorModal = ({ isOpen, message, onClose }: ErrorModalProps) => {
 
                 {/* Message */}
                 <div className="pr-8">
-                    <p className="text-lg font-semibold text-red-500">{message}</p>
+                    <p className="text-lg text-black font-semibold">{message}</p>
                 </div>
             </div>
         </div>
     );
 };
 
-export default ErrorModal;
+export default ErrorModalBlack;
