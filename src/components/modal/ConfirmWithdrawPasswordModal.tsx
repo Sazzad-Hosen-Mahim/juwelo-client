@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 // import { X } from "lucide-react";
@@ -16,6 +17,7 @@ const ConfirmWithdrawPasswordModal = ({
     onConfirm,
 }: ConfirmWithdrawPasswordModalProps) => {
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     // Reset password when modal closes
     useEffect(() => {
@@ -50,12 +52,19 @@ const ConfirmWithdrawPasswordModal = ({
                 <div className="p-6 space-y-4">
                     <div className="space-y-2">
                         <Input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Enter withdrawal password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="bg-slate-50 border-slate-200 focus:bg-white transition-colors"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute inset-y-0 bottom-2 right-40 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                        >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        </button>
                     </div>
 
                     <div className="flex justify-end gap-3 pt-2">
