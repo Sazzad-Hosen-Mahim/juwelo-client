@@ -273,14 +273,14 @@ const Product: React.FC = () => {
             </div>
 
             {/* Bottom Action Buttons */}
-            <div className="fixed bottom-24 left-0 right-0 bg-white border-t border-gray-200 p-4 max-w-[500px] mx-auto">
+            <div className="fixed bottom-24 left-0 right-0 bg-white border-t border-gray-200 p-2 max-w-[500px] mx-auto">
                 <div className="grid grid-cols-2 gap-3">
 
                     <button
                         onClick={handleModalOpen}
                         disabled={isConfirming}
                         className={`
-              py-4 px-6 rounded-lg font-semibold cursor-pointer text-lg transition-colors
+              lg:py-4 lg:px-6 rounded-lg font-semibold cursor-pointer lg:text-lg transition-colors
               ${isConfirming
                                 ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                                 : "bg-gray-900 text-white hover:bg-gray-800"
@@ -290,16 +290,16 @@ const Product: React.FC = () => {
                         Submit Order
                     </button>
                     {purchaseData?.data?.mysteryboxMethod ? (
-                        <div className="py-4 px-6 bg-green-100 text-green-800 rounded-lg font-semibold text-lg text-center">
+                        <div className="lg:py-4 lg:px-6 py-2 px-4 bg-green-100 text-green-800 rounded-lg font-semibold text-lg text-center">
                             <div className="flex flex-col items-center">
                                 {purchaseData?.data?.mysteryboxMethod === "12x" ? (
-                                    <span>Earn Profit: <span className="text-2xl">12x</span></span>
+                                    <span>Earn Profit: <span className="lg:text-2xl text-xl">12x</span></span>
                                 ) : purchaseData?.data?.mysteryboxMethod === "cash" ? (
-                                    <span>Earn Profit: <span className="text-2xl">Cash</span></span>
+                                    <span>Earn Profit: <span className="lg:text-2xl text-xl">Cash</span></span>
                                 ) : (
-                                    <span>Earn Profit: <span className="text-2xl">3x</span></span>
+                                    <span>Earn Profit: <span className="lg:text-2xl text-xl">3x</span></span>
                                 )}
-                                <span className="text-lg font-bold text-start">{formatCurrency(purchaseData?.data?.commission)}</span>
+                                <span className="lg:text-lg text-base font-bold text-start">{formatCurrency(purchaseData?.data?.commission)}</span>
                             </div>
                         </div>
                     ) : (

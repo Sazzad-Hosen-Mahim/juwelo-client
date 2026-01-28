@@ -224,7 +224,7 @@ const Navbar = () => {
               )}
 
               <a
-                href="/index"
+                href="/"
                 className="text-white text-2xl font-bold flex items-center"
               >
                 <span className="text-xl">
