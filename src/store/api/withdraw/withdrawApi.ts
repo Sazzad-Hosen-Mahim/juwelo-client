@@ -46,19 +46,22 @@ interface HistoryItem {
 
 interface SingleHistoryItem {
     _id: string;
-    userId: string;
+    userId: number;
+    amount: number;
     transactionStatus: string;
     superiorUserName: string;
-    BankName: string;
-    withdrawalAddress: string;
+    name: string;
+    withdrawMethod: string;
+    bankName?: string;
+    bankAccountNumber?: number;
+    branchName?: string;
+    district?: string;
     withdrawalAmount: number;
-    withdrawalFee: number;
-    actualAmount: number;
     totalRechargeAmount: number;
     totalWithdrawalAmount: number;
     applicationTime: string;
-    processingTime: string;
-    reviewRemark: string;
+    processingTime?: string;
+    reviewRemark?: string;
     createdAt: string;
     updatedAt: string;
     __v: number;
@@ -66,7 +69,7 @@ interface SingleHistoryItem {
 
 interface SingleHistoryResponse {
     success: boolean;
-    data: SingleHistoryItem;
+    data: SingleHistoryItem[]; // It returns an array
 }
 
 interface HistoryResponse {

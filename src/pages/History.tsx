@@ -104,7 +104,7 @@ const History = () => {
     const isLoading = activeTab === 'withdraw' ? withdrawLoading : otherLoading;
     const error = activeTab === 'withdraw' ? withdrawError : otherError;
     const hasData = activeTab === 'withdraw'
-        ? withdrawData?.data
+        ? withdrawData?.data && withdrawData.data.length > 0
         : otherData?.data && otherData.data.length > 0;
 
     return (
@@ -169,63 +169,61 @@ const History = () => {
                     </div>
                 )}
 
-                {/* Withdraw History (Single Item) */}
-                {!isLoading && !error && activeTab === 'withdraw' && withdrawData?.data && (
+                {/* Withdraw History (Multiple Items) */}
+                {!isLoading && !error && activeTab === 'withdraw' && withdrawData?.data && withdrawData.data.length > 0 && (
                     <div className="divide-y divide-gray-100">
-                        <div className="p-4 hover:bg-gray-50 transition-colors">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="flex items-center space-x-4">
-                                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100">
-                                        <span className="text-xl text-red-600">↓</span>
+                        {withdrawData.data.map((item) => (
+                            <div key={item._id} className="p-4 hover:bg-gray-50 transition-colors">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100">
+                                            <span className="text-xl text-red-600">↓</span>
+                                        </div>
+                                        <div>
+                                            <p className="font-semibold text-gray-800">Withdraw</p>
+                                            <p className="text-sm text-gray-500">
+                                                {formatDate(item.applicationTime)}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-gray-800">Withdraw</p>
-                                        <p className="text-sm text-gray-500">
-                                            {formatDate(withdrawData.data.applicationTime)}
+                                    <div className="text-right">
+                                        <p className="text-lg font-bold text-red-600">
+                                            -{formatAmount(item.withdrawalAmount || item.amount)}
                                         </p>
+                                        <span className={`text-xs px-2 py-1 rounded ${item.transactionStatus === 'APPROVED' || item.transactionStatus === 'completed'
+                                            ? 'bg-green-100 text-green-800'
+                                            : item.transactionStatus === 'pending'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-gray-100 text-gray-800'
+                                            }`}>
+                                            {item.transactionStatus || 'Unknown'}
+                                        </span>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-lg font-bold text-red-600">
-                                        -{formatAmount(withdrawData.data.withdrawalAmount)}
-                                    </p>
-                                    <span className={`text-xs px-2 py-1 rounded ${withdrawData.data.transactionStatus === 'completed'
-                                        ? 'bg-green-100 text-green-800'
-                                        : withdrawData.data.transactionStatus === 'pending'
-                                            ? 'bg-yellow-100 text-yellow-800'
-                                            : 'bg-gray-100 text-gray-800'
-                                        }`}>
-                                        {withdrawData.data.transactionStatus || 'Unknown'}
-                                    </span>
-                                </div>
-                            </div>
 
-                            {/* Additional Withdraw Details */}
-                            <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
-                                <div>
-                                    <p className="text-xs text-gray-500">Bank Name</p>
-                                    <p className="font-medium">{withdrawData.data.BankName || 'N/A'}</p>
+                                {/* Additional Withdraw Details */}
+                                <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
+                                    {item.bankName && (
+                                        <div>
+                                            <p className="text-xs text-gray-500">Bank Name</p>
+                                            <p className="font-medium">{item.bankName}</p>
+                                        </div>
+                                    )}
+                                    {item.processingTime && (
+                                        <div>
+                                            <p className="text-xs text-gray-500">Processing Time</p>
+                                            <p className="font-medium">{formatDate(item.processingTime)}</p>
+                                        </div>
+                                    )}
+                                    {item.reviewRemark && (
+                                        <div className="col-span-2">
+                                            <p className="text-xs text-gray-500">Review Remark</p>
+                                            <p className="font-medium">{item.reviewRemark}</p>
+                                        </div>
+                                    )}
                                 </div>
-                                {/* <div>
-                                    <p className="text-xs text-gray-500">Withdrawal Fee</p>
-                                    <p className="font-medium">{formatAmount(withdrawData.data.withdrawalFee)}</p>
-                                </div> */}
-                                <div>
-                                    <p className="text-xs text-gray-500">Actual Amount</p>
-                                    <p className="font-medium">{formatAmount(withdrawData.data.actualAmount)}</p>
-                                </div>
-                                {/* <div>
-                                    <p className="text-xs text-gray-500">Processing Time</p>
-                                    <p className="font-medium">{formatDate(withdrawData.data.processingTime)}</p>
-                                </div> */}
-                                {withdrawData.data.reviewRemark && (
-                                    <div className="col-span-2">
-                                        <p className="text-xs text-gray-500">Review Remark</p>
-                                        <p className="font-medium">{withdrawData.data.reviewRemark}</p>
-                                    </div>
-                                )}
                             </div>
-                        </div>
+                        ))}
                     </div>
                 )}
 

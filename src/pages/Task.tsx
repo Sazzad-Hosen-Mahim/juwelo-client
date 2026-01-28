@@ -200,7 +200,7 @@ const Task: React.FC = () => {
       }
     }
 
-    if ((user?.orderRound?.round === "trial" || "round_one") && (user?.completedOrdersCount === 25) && (user?.trialRoundBalance === 0)) {
+    if ((user?.orderRound?.round === "trial") && (user?.completedOrdersCount === 25) && (user?.trialRoundBalance === 0)) {
       setErrorMessageBlack("You have successfully completed all snatched orders. Please proceed with your withdrawal request immediately. Thank you!");
       setOpenErrorModalBlack(true);
       return;
