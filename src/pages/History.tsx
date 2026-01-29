@@ -62,12 +62,15 @@ const History = () => {
     };
 
     const formatAmount = (amount: number | undefined) => {
-        if (amount === undefined || amount === null || isNaN(amount)) return '$0.00';
+        if (amount === undefined || amount === null || isNaN(amount)) return '৳0.00';
+
         return amount.toLocaleString('en-US', {
             style: 'currency',
-            currency: 'USD'
+            currency: 'BDT',
+            currencyDisplay: 'symbol',
         });
     };
+
 
     const getHistoryIcon = (type: 'checkIn' | 'withdraw' | 'recharge') => {
         switch (type) {
