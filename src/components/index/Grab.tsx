@@ -29,9 +29,9 @@ const Grab = () => {
 
         <button
           onClick={handleGrabOrder}
-          className="bg-black cursor-pointer text-white rounded-md px-4 py-2 w-32 text-center hover:opacity-90"
+          className="bg-black cursor-pointer text-white rounded-md p-2 py-2 w-32 text-center hover:opacity-90"
         >
-          Grab Order
+          Mining Order
         </button>
       </div>
     </div>

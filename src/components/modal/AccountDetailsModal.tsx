@@ -78,7 +78,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                             <p className={`font-semibold ${data?.outOfBalance > 0 ? "text-red-500" : "text-gray-700"}`}>{data?.outOfBalance.toFixed(2)}</p>
                         </div>
                         <div>
-                            <p className="text-md text-gray-700 font-bold">Current Grab Order</p>
+                            <p className="text-md text-gray-700 font-bold">Current Mining Order</p>
                             <p className="text-gray-700 font-semibold ">
                                 {data?.completedOrdersCount} / 25
                             </p>

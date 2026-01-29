@@ -131,7 +131,7 @@ const Navbar = () => {
                             <div className="w-12 h-12 flex items-center justify-center">
                               <DollarSign className="w-6 h-6" />
                             </div>
-                            <span className="text-xs text-center">Cash Out</span>
+                            <span className="text-xs text-center">Sell Out</span>
                           </button>
                         </Link>
                         <Link to="/contact">
