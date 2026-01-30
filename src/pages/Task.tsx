@@ -118,43 +118,6 @@ const Task: React.FC = () => {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   refetch();
-  // }, []);
-
-  // Check purchase order response for errors
-  // useEffect(() => {
-  //   if (shouldCheckOrder && !isPurchaseOrderLoading) {
-  //     if (purchaseOrderData?.data?.success === false) {
-  //       // Backend returned success: true but data.success: false
-  //       setOpenMiningModal(false);
-  //       setErrorMessage(purchaseOrderData.data.message || "Unable to process order");
-  //       setOpenErrorModal(true);
-  //       setShouldCheckOrder(false);
-  //     } else if (purchaseOrderData?.success === false) {
-  //       // Backend returned success: false
-  //       setOpenMiningModal(false);
-  //       setErrorMessage(purchaseOrderData.message || "Unable to process order");
-  //       setOpenErrorModal(true);
-  //       setShouldCheckOrder(false);
-  //     } else if (purchaseOrderError) {
-  //       // Network or other error
-  //       setOpenMiningModal(false);
-  //       const errorData = purchaseOrderError as any;
-  //       setErrorMessage(errorData?.data?.data?.message || errorData?.data?.message || "Unable to process order");
-  //       setOpenErrorModal(true);
-  //       setShouldCheckOrder(false);
-  //     } else if (purchaseOrderData?.success === true && purchaseOrderData?.data?.success !== false) {
-  //       // Success - navigate after delay
-  //       setTimeout(() => {
-  //         setOpenMiningModal(false);
-  //         setShouldCheckOrder(false);
-  //         navigate("/product");
-  //       }, 3000);
-  //     }
-  //   }
-  // }, [shouldCheckOrder, isPurchaseOrderLoading, purchaseOrderData, purchaseOrderError, navigate]);
-
   const accountDetailsData = {
     name: user?.name || "sajjadhosenmahim",
     userId: user?.userId || 7872843,
@@ -170,16 +133,9 @@ const Task: React.FC = () => {
 
   console.log(user, "aaaaayaaaat")
 
-  // useEffect(() => {
-  //   if ((user?.orderRound?.round === "trial") && (user?.completedOrdersCount === 25) && (user?.trialRoundBalance === 0)) {
-  //     setErrorMessage("You have successfully completed all snatched orders. Please proceed with your withdrawal request immediately. Thank you!");
-  //     setOpenErrorModal(true);
-  //   }
-  // }, [user])
-
   const handleStartClick = () => {
     // Check if user has admin assigned products with mystery box
-    refetch();
+    // refetch();
     if (user?.adminAssaignProductsOrRewards && user.adminAssaignProductsOrRewards.length > 0) {
       const productWithMysteryBox = user.adminAssaignProductsOrRewards.find(
         (product: any) =>
@@ -200,6 +156,8 @@ const Task: React.FC = () => {
       }
     }
 
+    refetch();
+
     if ((user?.orderRound?.round === "trial") && (user?.completedOrdersCount === 25) && (user?.trialRoundBalance === 0)) {
       setErrorMessageBlack("Your trial round has been completed. Now, to start the next round, please contact your senior consultant.");
       setOpenErrorModalBlack(true);
@@ -210,6 +168,8 @@ const Task: React.FC = () => {
       setOpenErrorModalBlack(true);
       return;
     }
+
+
 
     // Check if user has selected package (0 means not selected)
     if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {

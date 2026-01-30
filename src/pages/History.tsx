@@ -8,6 +8,7 @@ interface HistoryItem {
     userId: string;
     historyType: 'checkIn' | 'withdraw' | 'recharge';
     amount: number;
+    notes?: string;
     time: string;
     createdAt: string;
     updatedAt: string;
@@ -190,7 +191,7 @@ const History = () => {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-lg font-bold text-red-600">
+                                        <p className="text-md font-bold text-red-600">
                                             -{formatAmount(item.withdrawalAmount || item.amount)}
                                         </p>
                                         <span className={`text-xs px-2 py-1 rounded ${item.transactionStatus === 'APPROVED' || item.transactionStatus === 'completed'
@@ -214,13 +215,13 @@ const History = () => {
                                     )}
                                     {item.processingTime && (
                                         <div>
-                                            <p className="lg:text-xs text-gray-500">Processing Time</p>
+                                            <p className="text-xs text-gray-500">Processing Time</p>
                                             <p className="font-medium">{formatDate(item.processingTime)}</p>
                                         </div>
                                     )}
                                     {item.reviewRemark && (
                                         <div className="col-span-2">
-                                            <p className="lg:text-xs text-gray-500">Review Remark</p>
+                                            <p className="text-xs text-gray-500">Review Remark</p>
                                             <p className="font-medium">{item.reviewRemark}</p>
                                         </div>
                                     )}
@@ -256,11 +257,18 @@ const History = () => {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className={`text-lg font-bold ${getHistoryColor(item.historyType)}`}>
+                                        <p className={`text-md font-bold ${getHistoryColor(item.historyType)}`}>
                                             +{formatAmount(item.amount)}
                                         </p>
                                     </div>
                                 </div>
+                                {
+                                    item?.notes && (
+                                        <p className="text-sm text-gray-500 mt-3">
+                                            Notes: {item.notes}
+                                        </p>
+                                    )
+                                }
                             </div>
                         ))}
                     </div>

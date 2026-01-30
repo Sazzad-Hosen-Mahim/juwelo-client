@@ -36,7 +36,7 @@ const ErrorModalBlack = ({ isOpen, message, onClose }: ErrorModalProps) => {
                     </div>
 
                     <div className="mt-5 flex justify-center">
-                        <button onClick={onClose} className="bg-[#712098] hover:bg-[#5a1a7a] cursor-pointer text-white px-4 py-2 w-full rounded">Close</button>
+                        <button onClick={onClose} className="bg-golden hover:bg-golden/80 cursor-pointer text-white px-4 py-2 w-full rounded">Close</button>
                     </div>
                 </div>
             </div>

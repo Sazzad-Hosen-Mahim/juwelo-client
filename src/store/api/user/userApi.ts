@@ -37,7 +37,7 @@ export const userApi = baseApi.injectEndpoints({
                 url: `/user/purchase-order/${userId}`,
                 method: "GET",
             }),
-            providesTags: ["Auth"],
+            providesTags: ["PurchaseOrder"],
             keepUnusedDataFor: 0,
             // refetchOnMountOrArgChange: true
         }),

@@ -189,7 +189,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">District *</label>
                         <input
                             type="text"
-                            placeholder=""
+                            placeholder="Please Enter your district name"
                             value={districtName}
                             onChange={(e) => setDistrictName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -202,10 +202,10 @@ const BindAccount = () => {
             {accountType === "MobileBanking" && (
                 <>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Provider *</label>
+                        <label className="block text-sm font-medium mb-1">Method *</label>
                         <input
                             type="text"
-                            placeholder=""
+                            placeholder="Please Enter your mobile banking method"
                             value={provider}
                             onChange={(e) => setProvider(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -215,7 +215,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">Mobile Number *</label>
                         <input
                             type="tel"
-                            placeholder=""
+                            placeholder="Please Enter your phone number"
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -225,7 +225,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">District *</label>
                         <input
                             type="text"
-                            placeholder=""
+                            placeholder="Please Enter your district name"
                             value={districtName}
                             onChange={(e) => setDistrictName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
