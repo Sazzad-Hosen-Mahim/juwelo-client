@@ -28,22 +28,28 @@ export default function CheckIn() {
     const [claimReward, { isLoading: isClaiming }] = useClaimCheckInRewardMutation();
 
     const orderCount = userData?.data?.orderCountForCheckIn ?? 0;
-    // Example: you might later get claimed days from backend
-    // For now we'll use a simple local simulation (you should replace with real data)
-    const claimedDays = userData?.data?.claimedCheckInDays || []; // e.g. [1,2,3]
+    // Use totalCheckIns from dailyCheckInReward to determine which days are claimed
+    const totalCheckIns = userData?.data?.dailyCheckInReward?.totalCheckIns ?? 0;
 
     const handleClaim = async (dayNum: number, amount: number) => {
         if (isClaiming) return;
 
         try {
-            await claimReward({
+            const response = await claimReward({
                 userId,
                 checkInAmount: amount,
             }).unwrap();
 
+            // Show success toast with API message
+            toast.success(response?.message || "Check In reward added successfully");
+
             console.log(`Claimed day ${dayNum} → ৳${amount}`);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Claim failed:", err);
+
+            // Show error toast with API error message
+            const errorMessage = err?.data?.message || "Failed to claim reward";
+            toast.error(errorMessage);
         }
     };
 
@@ -77,35 +83,14 @@ export default function CheckIn() {
                             <RewardItem
                                 key={item.dayNum}
                                 {...item}
-                                isClaimed={claimedDays.includes(item.dayNum)}
-                                isUnlocked={orderCount >= 40} // adjust logic per day if needed
+                                isClaimed={item.dayNum <= totalCheckIns}
+                                isUnlocked={orderCount >= 41}
                                 onClaim={() => handleClaim(item.dayNum, item.numericAmount)}
+                                isClaiming={isClaiming}
                             />
                         ))}
                     </div>
-
-                    {/* Bottom row - centered */}
-                    {/* <div className="flex justify-center gap-10 flex-wrap">
-                        {rewards.slice(5).map((item) => (
-                            <RewardItem
-                                key={item.dayNum}
-                                {...item}
-                                isClaimed={claimedDays.includes(item.dayNum)}
-                                isUnlocked={orderCount >= 40} // adjust logic per day if needed
-                                onClaim={() => handleClaim(item.dayNum, item.numericAmount)}
-                            />
-                        ))}
-                    </div> */}
                 </div>
-
-                {/* You can keep a global Check In button or remove it */}
-                {/* <button className="mt-6 w-full rounded-lg bg-gray-900 py-3 text-white font-medium">
-          Check In
-        </button> */}
-
-                {/* <p className="mt-4 text-center text-sm text-gray-500">
-                    +৳20000 You can get Reward for signing in for 7 days
-                </p> */}
             </div>
         </div>
     );
@@ -118,6 +103,7 @@ interface RewardItemProps {
     dayNum: number;
     isClaimed?: boolean;
     isUnlocked?: boolean;
+    isClaiming?: boolean;
     onClaim: () => void;
 }
 
@@ -126,18 +112,19 @@ function RewardItem({
     amount,
     isClaimed = false,
     isUnlocked = false,
+    isClaiming = false,
     onClaim,
 }: RewardItemProps) {
 
     const handleClick = () => {
-        if (!isUnlocked && !isClaimed) {
+        if (isClaimed || isClaiming) return;
+
+        if (!isUnlocked) {
             toast.info("Complete 40 orders to unlock the reward");
             return;
         }
 
-        if (!isClaimed) {
-            onClaim();
-        }
+        onClaim();
     };
 
     return (
@@ -145,10 +132,11 @@ function RewardItem({
             <button
                 type="button"
                 onClick={handleClick}
+                disabled={isClaimed || isClaiming}
                 className={`
                     relative flex flex-col items-center gap-1 p-3 rounded-xl transition-all
                     ${isClaimed
-                        ? "bg-green-50 border border-green-200"
+                        ? "bg-green-50 border border-green-200 cursor-not-allowed"
                         : isUnlocked
                             ? "bg-blue-50 hover:bg-blue-100 border border-blue-200 active:scale-95"
                             : "bg-gray-100 border border-gray-200"}
