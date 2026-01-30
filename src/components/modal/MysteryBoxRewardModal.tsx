@@ -26,6 +26,9 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
     const [revealedBoxes, setRevealedBoxes] = useState<BoxReveal[]>([]);
     const [isAnimating, setIsAnimating] = useState(false);
 
+    const normalizedReward = Number(mysteryReward);
+
+
     useEffect(() => {
         // Reset state when modal opens
         if (open) {
@@ -37,23 +40,43 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
 
     if (!open) return null;
 
-    const generateRandomAmount = (): string => {
-        // Generate random amount between 50% to 150% of mystery reward
-        const min = Math.floor(mysteryReward * 0.5);
-        const max = Math.floor(mysteryReward * 1.5);
+    // const generateRandomAmount = (): string => {
+    //     // Generate random amount between 50% to 150% of mystery reward
+    //     const min = Math.floor(mysteryReward * 0.5);
+    //     const max = Math.floor(mysteryReward * 1.5);
+    //     const amount = Math.floor(Math.random() * (max - min + 1)) + min;
+    //     return amount.toLocaleString();
+    // };
+
+    const generateLowerAmount = (): string => {
+        const min = Math.floor(normalizedReward * 0.5);
+        const max = normalizedReward - 1;
         const amount = Math.floor(Math.random() * (max - min + 1)) + min;
         return amount.toLocaleString();
     };
 
-    const generateUniqueAmounts = (count: number): string[] => {
-        const amounts = new Set<string>();
-
-        while (amounts.size < count) {
-            amounts.add(generateRandomAmount());
-        }
-
-        return Array.from(amounts);
+    const generateHigherAmount = (): string => {
+        const min = normalizedReward + 1;
+        const max = Math.floor(normalizedReward * 1.5);
+        const amount = Math.floor(Math.random() * (max - min + 1)) + min;
+        return amount.toLocaleString();
     };
+
+
+    console.log("Mystery Reward RAW:", mysteryReward);
+    console.log("Mystery Reward TYPE:", typeof mysteryReward);
+
+
+
+    // const generateUniqueAmounts = (count: number): string[] => {
+    //     const amounts = new Set<string>();
+
+    //     while (amounts.size < count) {
+    //         amounts.add(generateRandomAmount());
+    //     }
+
+    //     return Array.from(amounts);
+    // };
 
     const handleBoxClick = (boxIndex: number) => {
         if (selectedBox !== null || isAnimating) return;
@@ -67,7 +90,7 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
                 ...prev,
                 {
                     boxIndex,
-                    amount: mysteryReward.toLocaleString(),
+                    amount: normalizedReward.toLocaleString(),
                     isWinning: true,
                 },
             ]);
@@ -76,17 +99,23 @@ const MysteryBoxRewardModal: React.FC<MysteryBoxModalProps> = ({
         // Reveal other boxes after a delay with unique random amounts
         setTimeout(() => {
             const otherBoxes = [0, 1, 2].filter((i) => i !== boxIndex);
-            const uniqueAmounts = generateUniqueAmounts(2);
+
+            // Generate one lower & one higher amount
+            const amounts = [
+                generateLowerAmount(),
+                generateHigherAmount(),
+            ].sort(() => Math.random() - 0.5); // shuffle so order is random
 
             const reveals: BoxReveal[] = otherBoxes.map((idx, i) => ({
                 boxIndex: idx,
-                amount: uniqueAmounts[i],
+                amount: amounts[i],
                 isWinning: false,
             }));
 
             setRevealedBoxes((prev) => [...prev, ...reveals]);
             setIsAnimating(false);
         }, 1500);
+
     };
 
     const getRevealedAmount = (boxIndex: number): BoxReveal | undefined => {

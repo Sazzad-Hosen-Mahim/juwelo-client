@@ -117,7 +117,7 @@ const Product: React.FC = () => {
             purchaseData?.data?.outOfBalance > 0 &&
             purchaseData?.data?.mysteryboxMethod == "3x"
         ) {
-            return "(Royal Order)";
+            return "(Supreme Order)";
         }
 
         return "";
@@ -139,7 +139,7 @@ const Product: React.FC = () => {
         return (
             <div className="max-w-[500px] mx-auto bg-white h-screen flex items-center justify-center">
                 <div className="text-center px-4">
-                    <p className="text-red-600 mb-4">Failed to load product</p>
+                    <p className="text-slate-900 mb-4">{purchaseData?.data?.message}</p>
                     <button
                         onClick={handleBack}
                         className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
@@ -225,7 +225,7 @@ const Product: React.FC = () => {
                         <div className="flex justify-between items-center">
                             <span className="text-gray-600 font-medium">Sale Price:</span>
                             <span className="text-2xl font-bold text-gray-900">
-                                {formatCurrency(product.salePrice)}
+                                {purchaseData?.data?.mysteryboxMethod === "12x" || purchaseData?.data?.mysteryboxMethod === "3x" ? formatCurrency(purchaseData?.data?.commission + purchaseData?.data?.product?.price) : formatCurrency(purchaseData?.data?.product?.commission)}
                             </span>
                         </div>
                         {/* {

@@ -180,11 +180,11 @@ const History = () => {
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center space-x-4">
                                         <div className="w-10 h-10 rounded-full flex items-center justify-center bg-red-100">
-                                            <span className="text-xl text-red-600">↓</span>
+                                            <span className="lg:text-xl text-red-600">↓</span>
                                         </div>
                                         <div>
                                             <p className="font-semibold text-gray-800">Withdraw</p>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="lg:text-sm text-xs text-gray-500">
                                                 {formatDate(item.applicationTime)}
                                             </p>
                                         </div>
@@ -208,19 +208,19 @@ const History = () => {
                                 <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-100">
                                     {item.bankName && (
                                         <div>
-                                            <p className="text-xs text-gray-500">Bank Name</p>
+                                            <p className="lg:text-xs text-gray-500">Bank Name</p>
                                             <p className="font-medium">{item.bankName}</p>
                                         </div>
                                     )}
                                     {item.processingTime && (
                                         <div>
-                                            <p className="text-xs text-gray-500">Processing Time</p>
+                                            <p className="lg:text-xs text-gray-500">Processing Time</p>
                                             <p className="font-medium">{formatDate(item.processingTime)}</p>
                                         </div>
                                     )}
                                     {item.reviewRemark && (
                                         <div className="col-span-2">
-                                            <p className="text-xs text-gray-500">Review Remark</p>
+                                            <p className="lg:text-xs text-gray-500">Review Remark</p>
                                             <p className="font-medium">{item.reviewRemark}</p>
                                         </div>
                                     )}

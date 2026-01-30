@@ -50,7 +50,7 @@ const ConfirmWithdrawPasswordModal = ({
                 </div>
 
                 <div className="p-6 space-y-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 relative">
                         <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter sell out password"
@@ -61,23 +61,23 @@ const ConfirmWithdrawPasswordModal = ({
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 bottom-2 right-40 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                            className="absolute inset-y-0 bottom-2 right-1 flex items-center pr-3 text-gray-500 hover:text-gray-700"
                         >
                             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                         </button>
                     </div>
 
-                    <div className="flex justify-end gap-3 pt-2">
+                    <div className="flex lg:justify-end justify-center gap-3 pt-2">
                         <Button
                             variant="outline"
                             onClick={onClose}
-                            className="w-full sm:w-auto cursor-pointer"
+                            className="lg:w-auto w-1/2 cursor-pointer"
                         >
                             Cancel
                         </Button>
                         <Button
                             onClick={handleConfirm}
-                            className="bg-black text-white cursor-pointer hover:bg-gray-800 w-full sm:w-auto"
+                            className="bg-black text-white cursor-pointer hover:bg-gray-800 lg:w-auto w-1/2"
                         >
                             Confirm
                         </Button>

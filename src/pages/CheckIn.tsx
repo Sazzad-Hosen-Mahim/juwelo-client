@@ -72,8 +72,8 @@ export default function CheckIn() {
                 {/* Rewards Grid */}
                 <div className="flex flex-col gap-6">
                     {/* Top row */}
-                    <div className="flex justify-between gap-2 flex-wrap">
-                        {rewards.slice(0, 5).map((item) => (
+                    <div className="flex gap-2 flex-wrap">
+                        {rewards.map((item) => (
                             <RewardItem
                                 key={item.dayNum}
                                 {...item}
@@ -85,7 +85,7 @@ export default function CheckIn() {
                     </div>
 
                     {/* Bottom row - centered */}
-                    <div className="flex justify-center gap-10 flex-wrap">
+                    {/* <div className="flex justify-center gap-10 flex-wrap">
                         {rewards.slice(5).map((item) => (
                             <RewardItem
                                 key={item.dayNum}
@@ -95,7 +95,7 @@ export default function CheckIn() {
                                 onClaim={() => handleClaim(item.dayNum, item.numericAmount)}
                             />
                         ))}
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* You can keep a global Check In button or remove it */}

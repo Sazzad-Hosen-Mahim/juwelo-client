@@ -40,17 +40,6 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
 
     if (!open) return null;
 
-    // const generateRandomMultiplier = (method: string): string => {
-    //     if (method === "12x") {
-    //         // Generate random multiplier between 50x to 150x
-    //         const multiplier = Math.floor(Math.random() * (150 - 50 + 1)) + 50;
-    //         return `${multiplier}x`;
-    //     } else {
-    //         // For cash method, generate between 100x to 200x
-    //         const multiplier = Math.floor(Math.random() * (200 - 100 + 1)) + 100;
-    //         return `${multiplier}x`;
-    //     }
-    // };
     const generateRandomMultiplier = (method: string): string => {
         if (method === "12x") {
             // Multiplier reward
@@ -137,11 +126,11 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                     {/* Header */}
                     <div className="text-center mb-8">
                         <h2 className="text-4xl font-bold text-white mb-2">
-                            Supreme Box!
+                            Crown Box!
                         </h2>
                         <p className="text-gray-300 text-lg">
                             {selectedBox === null
-                                ? "Choose Your Supreme Box"
+                                ? "Choose Your Crown Box"
                                 : "Congratulations!"}
                         </p>
                     </div>

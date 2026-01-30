@@ -205,6 +205,11 @@ const Task: React.FC = () => {
       setOpenErrorModalBlack(true);
       return;
     }
+    if ((user?.orderRound?.round === "round_one") && (user?.completedOrdersCount === 25)) {
+      setErrorMessageBlack("Your round one has been completed. Now, to start the next round, please contact your senior consultant.");
+      setOpenErrorModalBlack(true);
+      return;
+    }
 
     // Check if user has selected package (0 means not selected)
     if (!user?.userSelectedPackage || user.userSelectedPackage === 0) {

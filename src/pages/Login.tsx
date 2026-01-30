@@ -9,7 +9,8 @@ import CountryCodeSelect from "@/components/Common/CountryCodeSelect";
 import { useAppDispatch } from "@/hooks/useRedux";
 import { setCredentials } from "@/store/Slices/AuthSlice/authSlice";
 import { toast } from "sonner";
-import ErrorModal from "@/components/modal/ErrorModal";
+// import ErrorModal from "@/components/modal/ErrorModal";
+import ErrorModalBlack from "@/components/modal/ErrorModalBlack";
 
 const loginSchema = z.object({
   phone: z.string().min(8, "Phone number must be at least 8 digits"),
@@ -187,7 +188,7 @@ const Login = () => {
           </span>
         </p>
       </div>
-      <ErrorModal
+      <ErrorModalBlack
         isOpen={!!errorMessage}
         message={errorMessage}
         onClose={() => setErrorMessage("")}
