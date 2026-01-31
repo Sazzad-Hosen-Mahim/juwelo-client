@@ -1,9 +1,8 @@
 import moneyBag from "@/assets/money-bag.png";
 import { useGetSingleUserQuery } from "@/store/api/user/userApi";
-import { useClaimCheckInRewardMutation } from "@/store/api/user/userApi"; // we'll add this
+import { useClaimCheckInRewardMutation } from "@/store/api/user/userApi";
 import { BsFileLock } from "react-icons/bs";
 import { toast } from "sonner";
-
 
 // Define reward structure with required amount (numeric) and day number
 const rewards = [
@@ -28,8 +27,10 @@ export default function CheckIn() {
     const [claimReward, { isLoading: isClaiming }] = useClaimCheckInRewardMutation();
 
     const orderCount = userData?.data?.orderCountForCheckIn ?? 0;
-    // Use totalCheckIns from dailyCheckInReward to determine which days are claimed
     const totalCheckIns = userData?.data?.dailyCheckInReward?.totalCheckIns ?? 0;
+
+    // Check if user has completed 41 orders to unlock the check-in feature
+    const hasCompletedRequiredOrders = orderCount >= 41;
 
     const handleClaim = async (dayNum: number, amount: number) => {
         if (isClaiming) return;
@@ -40,14 +41,10 @@ export default function CheckIn() {
                 checkInAmount: amount,
             }).unwrap();
 
-            // Show success toast with API message
             toast.success(response?.message || "Check In reward added successfully");
-
             console.log(`Claimed day ${dayNum} → ৳${amount}`);
         } catch (err: any) {
             console.error("Claim failed:", err);
-
-            // Show error toast with API error message
             const errorMessage = err?.data?.message || "Failed to claim reward";
             toast.error(errorMessage);
         }
@@ -73,22 +70,39 @@ export default function CheckIn() {
             <div className="mt-5 mx-auto rounded-xl bg-white p-5 shadow">
                 <div className="flex items-center justify-between mb-5">
                     <h3 className="font-semibold text-gray-800">Daily Check in</h3>
+                    {/* <p className="text-sm text-gray-600">
+                        Orders: {orderCount}/41 {!hasCompletedRequiredOrders && "(Complete 41 orders to unlock)"}
+                    </p> */}
                 </div>
 
                 {/* Rewards Grid */}
                 <div className="flex flex-col gap-6">
-                    {/* Top row */}
                     <div className="flex gap-2 flex-wrap">
-                        {rewards.map((item) => (
-                            <RewardItem
-                                key={item.dayNum}
-                                {...item}
-                                isClaimed={item.dayNum <= totalCheckIns}
-                                isUnlocked={orderCount >= 41}
-                                onClaim={() => handleClaim(item.dayNum, item.numericAmount)}
-                                isClaiming={isClaiming}
-                            />
-                        ))}
+                        {rewards.map((item) => {
+                            // Day is claimed if it's less than or equal to totalCheckIns
+                            const isClaimed = item.dayNum <= totalCheckIns;
+
+                            // Day is unlocked if:
+                            // 1. User has completed 41 orders AND
+                            // 2. This is the next day to claim (totalCheckIns + 1)
+                            const isUnlocked = hasCompletedRequiredOrders && item.dayNum === totalCheckIns + 1;
+
+                            // Day is locked if it's beyond the next claimable day
+                            const isLocked = item.dayNum > totalCheckIns + 1;
+
+                            return (
+                                <RewardItem
+                                    key={item.dayNum}
+                                    {...item}
+                                    isClaimed={isClaimed}
+                                    isUnlocked={isUnlocked}
+                                    isLocked={isLocked}
+                                    hasCompletedRequiredOrders={hasCompletedRequiredOrders}
+                                    onClaim={() => handleClaim(item.dayNum, item.numericAmount)}
+                                    isClaiming={isClaiming}
+                                />
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -103,6 +117,8 @@ interface RewardItemProps {
     dayNum: number;
     isClaimed?: boolean;
     isUnlocked?: boolean;
+    isLocked?: boolean;
+    hasCompletedRequiredOrders?: boolean;
     isClaiming?: boolean;
     onClaim: () => void;
 }
@@ -112,18 +128,27 @@ function RewardItem({
     amount,
     isClaimed = false,
     isUnlocked = false,
+    isLocked = false,
+    hasCompletedRequiredOrders = false,
     isClaiming = false,
     onClaim,
 }: RewardItemProps) {
 
     const handleClick = () => {
+        // Can't click if already claimed or currently claiming
         if (isClaimed || isClaiming) return;
 
+        // If not unlocked, show appropriate message
         if (!isUnlocked) {
-            toast.info("Complete 40 orders to unlock the reward");
+            if (!hasCompletedRequiredOrders) {
+                toast.info("Complete 41 orders to unlock check-in rewards");
+            } else if (isLocked) {
+                toast.info("Complete previous days first");
+            }
             return;
         }
 
+        // Claim the reward
         onClaim();
     };
 
@@ -132,18 +157,18 @@ function RewardItem({
             <button
                 type="button"
                 onClick={handleClick}
-                disabled={isClaimed || isClaiming}
+                disabled={isClaimed || isClaiming || !isUnlocked}
                 className={`
                     relative flex flex-col items-center gap-1 p-3 rounded-xl transition-all
                     ${isClaimed
                         ? "bg-green-50 border border-green-200 cursor-not-allowed"
                         : isUnlocked
-                            ? "bg-blue-50 hover:bg-blue-100 border border-blue-200 active:scale-95"
-                            : "bg-gray-100 border border-gray-200"}
+                            ? "bg-blue-50 hover:bg-blue-100 border border-blue-200 active:scale-95 cursor-pointer"
+                            : "bg-gray-100 border border-gray-200 cursor-not-allowed"}
                 `}
             >
-                {/* LOCK OVERLAY */}
-                {!isUnlocked && !isClaimed && (
+                {/* LOCK OVERLAY - show for locked days or if orders not completed */}
+                {(isLocked || !hasCompletedRequiredOrders) && !isClaimed && (
                     <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black/30">
                         <BsFileLock className="text-white text-2xl" />
                     </div>
@@ -152,7 +177,7 @@ function RewardItem({
                 <div
                     className={`
                         flex h-14 w-14 items-center justify-center rounded-full
-                        ${isClaimed ? "bg-green-100" : "bg-gray-200"}
+                        ${isClaimed ? "bg-green-100" : isUnlocked ? "bg-blue-100" : "bg-gray-200"}
                     `}
                 >
                     {isClaimed ? (
@@ -164,7 +189,11 @@ function RewardItem({
 
                 <span className="text-xs text-gray-600 font-medium">{day}</span>
                 <span
-                    className={`text-xs font-semibold ${isClaimed ? "text-green-600" : "text-red-500"
+                    className={`text-xs font-semibold ${isClaimed
+                        ? "text-green-600"
+                        : isUnlocked
+                            ? "text-blue-600"
+                            : "text-gray-400"
                         }`}
                 >
                     {isClaimed ? "Claimed" : amount}
