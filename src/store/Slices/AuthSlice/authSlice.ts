@@ -1,3 +1,4 @@
+import { disconnectSocket } from "@/utils/socket";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface User {
@@ -39,7 +40,8 @@ const authSlice = createSlice({
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("userId");
-      localStorage.removeItem("role")
+      localStorage.removeItem("role");
+      disconnectSocket();
     },
   },
 });

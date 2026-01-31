@@ -12,7 +12,6 @@ const rewards = [
     { day: "4 Day", amount: "৳3400", numericAmount: 3400, dayNum: 4 },
     { day: "5 Day", amount: "৳6000", numericAmount: 6000, dayNum: 5 },
     { day: "6 Day", amount: "৳12000", numericAmount: 12000, dayNum: 6 },
-    { day: "7 Day", amount: "৳20000", numericAmount: 20000, dayNum: 7 },
 ];
 
 export default function CheckIn() {

@@ -11,6 +11,8 @@ import { setCredentials } from "@/store/Slices/AuthSlice/authSlice";
 import { toast } from "sonner";
 // import ErrorModal from "@/components/modal/ErrorModal";
 import ErrorModalBlack from "@/components/modal/ErrorModalBlack";
+// import { Socket } from "socket.io-client";
+import { connectSocket } from "@/utils/socket";
 
 const loginSchema = z.object({
   phone: z.string().min(8, "Phone number must be at least 8 digits"),
@@ -69,6 +71,8 @@ const Login = () => {
         token: res.data.accessToken,
         refreshToken: res.data.refreshToken,
       }))
+
+      connectSocket(res.data.accessToken);
 
       navigate("/index");
       toast.success("Login successful");
