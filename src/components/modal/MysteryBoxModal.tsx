@@ -203,6 +203,7 @@ const MysteryBoxModal: React.FC<MysteryBoxModalProps> = ({
                                 <p className="text-yellow-400 text-4xl font-bold">
                                     {mysteryBoxData.method === "cash" ? "৳" : ""}{mysteryBoxData.amount}
                                 </p>
+                                <p className="text-yellow-400 text-4xl font-bold">{mysteryBoxData?.method === "12x" ? "Crown Order" : ""}</p>
                             </div>
                             <button
                                 onClick={onClose}

@@ -60,11 +60,11 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                         </div> */}
 
                         <div>
-                            <p className="text-md text-gray-700 font-bold">Available Balance</p>
+                            <p className="text-sm text-gray-700 font-bold">Available Balance</p>
                             <p className="font-semibold text-gray-700">{data.userBalance.toFixed(2)}</p>
                         </div>
                         <div>
-                            <p className="text-md text-gray-700 font-bold">Daily Profit</p>
+                            <p className="text-sm text-gray-700 font-bold">Daily Profit</p>
                             <p className="font-semibold text-gray-700">{data?.dailyProfit.toFixed(2)}</p>
                         </div>
 
@@ -74,17 +74,17 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                         </div> */}
 
                         <div>
-                            <p className="text-md text-gray-700 font-bold">Insufficient Balance</p>
-                            <p className={`font-semibold ${data?.outOfBalance > 0 ? "text-red-500" : "text-gray-700"}`}>{data?.outOfBalance.toFixed(2)}</p>
+                            <p className="text-sm text-gray-700 font-bold">Insufficient Balance</p>
+                            <p className={`font-semibold ${data?.outOfBalance > 0 || data?.outOfBalance < 0 ? "text-red-500" : "text-gray-700"}`}>{data?.outOfBalance.toFixed(2)}</p>
                         </div>
                         <div>
-                            <p className="text-md text-gray-700 font-bold">Current Mining Order</p>
+                            <p className="text-sm text-gray-700 font-bold">Current Mining Order</p>
                             <p className="text-gray-700 font-semibold ">
                                 {data?.completedOrdersCount} / 25
                             </p>
                         </div>
                         <div>
-                            <p className="text-md text-gray-700 font-bold">Trial Amount</p>
+                            <p className="text-sm text-gray-700 font-bold">Trial Amount</p>
                             <p className="font-semibold text-gray-700">{data?.trialRoundBalance.toFixed(2)}</p>
                         </div>
                     </div>

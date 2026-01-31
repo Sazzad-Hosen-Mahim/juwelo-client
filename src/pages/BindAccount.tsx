@@ -169,7 +169,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">Account Number *</label>
                         <input
                             type="text"
-                            placeholder="Enter account number"
+                            placeholder="Please enter account number"
                             value={accountNumber}
                             onChange={(e) => setAccountNumber(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -189,7 +189,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">District *</label>
                         <input
                             type="text"
-                            placeholder="Please Enter your district name"
+                            placeholder="Please enter district name"
                             value={districtName}
                             onChange={(e) => setDistrictName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -202,20 +202,20 @@ const BindAccount = () => {
             {accountType === "MobileBanking" && (
                 <>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Method *</label>
+                        <label className="block text-sm font-medium mb-1">Wallet *</label>
                         <input
                             type="text"
-                            placeholder="Please Enter your mobile banking method"
+                            placeholder="Please enter wallet method"
                             value={provider}
                             onChange={(e) => setProvider(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium mb-1">Mobile Number *</label>
+                        <label className="block text-sm font-medium mb-1">Wallet Number *</label>
                         <input
                             type="tel"
-                            placeholder="Please Enter your phone number"
+                            placeholder="Please enter wallet number"
                             value={mobileNumber}
                             onChange={(e) => setMobileNumber(e.target.value)}
                             className="w-full border px-3 py-2 rounded"
@@ -225,7 +225,7 @@ const BindAccount = () => {
                         <label className="block text-sm font-medium mb-1">District *</label>
                         <input
                             type="text"
-                            placeholder="Please Enter your district name"
+                            placeholder="Please enter district name"
                             value={districtName}
                             onChange={(e) => setDistrictName(e.target.value)}
                             className="w-full border px-3 py-2 rounded"

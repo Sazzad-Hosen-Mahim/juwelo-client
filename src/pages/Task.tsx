@@ -303,18 +303,18 @@ const Task: React.FC = () => {
         <div className="grid grid-cols-2 gap-2 mb-4 my-8">
           <button
             onClick={() => setOpenAccountModal(true)}
-            className="py-4 cursor-pointer text-white bg-gray-600 hover:bg-gray-700 font-medium transition-colors"
+            className="py-4 cursor-pointer rounded-sm text-white bg-gray-600 hover:bg-gray-700 font-medium transition-colors"
           >
             Account Details
           </button>
 
-          <Link to="/order-record" className="py-4 cursor-pointer text-white text-center bg-gray-600 hover:bg-gray-700 font-medium transition-colors">
+          <Link to="/order-record" className="py-4 cursor-pointer rounded-sm text-white text-center bg-gray-600 hover:bg-gray-700 font-medium transition-colors">
             Order Record
           </Link>
         </div>
         <button
           onClick={handleStartClick}
-          className="w-full py-4 text-white cursor-pointer bg-black hover:bg-gray-900 font-semibold text-lg transition-colors"
+          className="w-full py-4 text-white cursor-pointer bg-black rounded-sm hover:bg-gray-900 font-semibold text-lg transition-colors"
         >
           Start{" "}
           <span className="text-gray-200 ms-2">
