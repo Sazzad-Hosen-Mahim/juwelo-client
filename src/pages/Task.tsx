@@ -326,7 +326,10 @@ const Task: React.FC = () => {
       {/* Modals */}
       <AccountDetailsModal
         open={openAccountModal}
-        onClose={() => setOpenAccountModal(false)}
+        onClose={() => {
+          refetch();
+          setOpenAccountModal(false);
+        }}
         data={accountDetailsData}
       />
 
