@@ -236,7 +236,7 @@ const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex">
               <a
-                href="/about"
+                href="/event"
                 className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <MdEvent className="w-6 h-6" />

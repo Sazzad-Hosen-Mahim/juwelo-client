@@ -32,7 +32,7 @@ const ErrorModalBlack = ({ isOpen, message, onClose }: ErrorModalProps) => {
                 {/* Message */}
                 <div className="px-6">
                     <div >
-                        <p className="text-lg text-black font-base">{message}</p>
+                        <p className="text-lg text-center text-black font-base">{message}</p>
                     </div>
 
                     <div className="mt-5 flex justify-center">
