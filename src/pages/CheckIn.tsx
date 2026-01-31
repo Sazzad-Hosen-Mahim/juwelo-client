@@ -76,7 +76,7 @@ export default function CheckIn() {
 
                 {/* Rewards Grid */}
                 <div className="flex flex-col gap-6">
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="grid grid-cols-4 gap-2">
                         {rewards.map((item) => {
                             // Day is claimed if it's less than or equal to totalCheckIns
                             const isClaimed = item.dayNum <= totalCheckIns;
