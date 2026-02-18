@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Menu,
   User,
-  DollarSign,
+  // DollarSign,
   Mail,
 
   CreditCard,
@@ -22,6 +22,8 @@ import { logout } from "@/store/Slices/AuthSlice/authSlice";
 import { useGetSingleUserQuery } from "@/store/api/user/userApi";
 import AccountDetailsModal from "@/components/modal/AccountDetailsModal";
 import { MdEmojiEvents } from "react-icons/md";
+import { TbCurrencyTaka } from "react-icons/tb";
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -129,7 +131,8 @@ const Navbar = () => {
                         <Link to="/cash-out">
                           <button className="flex flex-col items-center cursor-pointer gap-2 hover:opacity-70 transition-opacity">
                             <div className="w-12 h-12 flex items-center justify-center">
-                              <DollarSign className="w-6 h-6" />
+                              {/* <DollarSign className="w-6 h-6" /> */}
+                              <TbCurrencyTaka className="w-6 h-6" />
                             </div>
                             <span className="text-xs text-center">Sell Out</span>
                           </button>
@@ -301,10 +304,10 @@ const Navbar = () => {
                 About
               </a>
               <a
-                href="/services"
+                href="/event"
                 className="text-white block hover:bg-gray-700 px-3 py-2 rounded-md text-base font-medium"
               >
-                Services
+                Event
               </a>
               <a
                 href="/contact"
