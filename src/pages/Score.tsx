@@ -41,7 +41,7 @@ const Score = () => {
         <div className="min-h-screen bg-gray-50 p-4">
             <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
                 {/* Header */}
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">Credit Score</h1>
+                <h1 className="text-3xl font-bold text-gray-800 mb-6">Score</h1>
 
                 {/* Current Score Display */}
                 <div className="border-4 border-red-500 rounded-lg p-4 mb-8">
@@ -112,19 +112,19 @@ const Score = () => {
                     </svg>
 
                     {/* Labels */}
-                    <div className="absolute top-28 left-12 text-xs font-semibold text-gray-700">
+                    <div className="absolute top-24 lg:top-28 left-8 lg:left-12 text-[9px] lg:text-xs font-semibold text-gray-700">
                         0-19
                     </div>
-                    <div className="absolute top-10 left-28 text-xs font-semibold text-gray-700">
+                    <div className="absolute top-8 lg:top-10 left-19 lg:left-28 text-[9px] lg:text-xs font-semibold text-gray-700">
                         20-39
                     </div>
-                    <div className="absolute top-5 left-1/2 transform -translate-x-1/2 text-xs font-semibold text-gray-700">
+                    <div className="absolute top-3 lg:top-5 left-1/2 transform -translate-x-1/2 text-[9px] lg:text-xs font-semibold text-gray-700">
                         40-59
                     </div>
-                    <div className="absolute top-10 right-28 text-xs font-semibold text-gray-700">
+                    <div className="absolute top-7 lg:top-10 right-21 lg:right-28 text-[9px] lg:text-xs font-semibold text-gray-700">
                         60-79
                     </div>
-                    <div className="absolute top-26 right-11 text-xs font-semibold text-gray-700">
+                    <div className="absolute top-26 right-5 lg:right-11 text-[9px] lg:text-xs font-semibold text-gray-700">
                         80-100
                     </div>
                 </div>
