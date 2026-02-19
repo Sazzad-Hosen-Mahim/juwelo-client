@@ -41,12 +41,12 @@ const Score = () => {
         <div className="min-h-screen bg-gray-50 p-4">
             <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
                 {/* Header */}
-                <h1 className="text-3xl font-bold text-gray-800 mb-6">Score</h1>
+                <h1 className="text-3xl font-bold text-gray-800 mb-6">Honor Score</h1>
 
                 {/* Current Score Display */}
                 <div className="border-4 border-red-500 rounded-lg p-4 mb-8">
                     <p className="text-xl font-semibold text-gray-700">
-                        Current Credit Score: {score}/100
+                        Current Honor Score: {score}/100
                     </p>
                 </div>
 
