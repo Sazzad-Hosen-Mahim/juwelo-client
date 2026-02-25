@@ -26,7 +26,13 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
 }) => {
     if (!open) return null;
 
-    console.log(data, "mahimmmm")
+    // console.log(data, "mahimmmm")
+
+    const formatMoney = (amount: number) =>
+        Number(amount || 0).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
 
 
     return (
@@ -61,11 +67,16 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
 
                         <div>
                             <p className="text-sm text-gray-700 font-bold">Available Balance</p>
-                            <p className="font-semibold text-gray-700">{data.userBalance.toFixed(2)}</p>
+                            <p className="font-semibold text-gray-700">
+                                {formatMoney(data?.userBalance)}
+                            </p>
                         </div>
+
                         <div>
                             <p className="text-sm text-gray-700 font-bold">Daily Profit</p>
-                            <p className="font-semibold text-gray-700">{data?.dailyProfit.toFixed(2)}</p>
+                            <p className="font-semibold text-gray-700">
+                                {formatMoney(data?.dailyProfit)}
+                            </p>
                         </div>
 
                         {/* <div>
@@ -75,7 +86,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
 
                         <div>
                             <p className="text-sm text-gray-700 font-bold">Insufficient Balance</p>
-                            <p className={`font-semibold ${data?.outOfBalance > 0 || data?.outOfBalance < 0 ? "text-red-500" : "text-gray-700"}`}>{data?.outOfBalance.toFixed(2)}</p>
+                            <p className={`font-semibold ${data?.outOfBalance > 0 || data?.outOfBalance < 0 ? "text-red-500" : "text-gray-700"}`}>{formatMoney(data?.outOfBalance)}</p>
                         </div>
                         <div>
                             <p className="text-sm text-gray-700 font-bold">Current Mining Order</p>
@@ -85,7 +96,7 @@ const AccountDetailsModal: React.FC<AccountDetailsModalProps> = ({
                         </div>
                         <div>
                             <p className="text-sm text-gray-700 font-bold">Trial Amount</p>
-                            <p className="font-semibold text-gray-700">{data?.trialRoundBalance.toFixed(2)}</p>
+                            <p className="font-semibold text-gray-700">{formatMoney(data?.trialRoundBalance)}</p>
                         </div>
                     </div>
                 </div>
